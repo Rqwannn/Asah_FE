@@ -1,16 +1,44 @@
-# React + Vite
+# Clean Architecture React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is an experiment in applying clean architecture with React.
 
-Currently, two official plugins are available:
+## Important
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Inside a React context, Clean Architecture will always be some kind of adaption. The key is separation of concerns and decoupling dependencies. In addition, the project originated as an example for personal study, if you want to make a suggestion go ahead and PR!
 
-## React Compiler
+## Architecture
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Models
 
-## Expanding the ESLint configuration
+- User
+- Todo
+  
+### Repositories
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- TodoRepository
+- UserRepository
+
+### DataSources
+
+- User
+  - UserAPIDataSource (From a REST API)
+- Todo
+  - TodoAPIDataSource (From a REST API)
+  - TodoLocalStorageDataSource (From Browser Local Storage)
+  
+### UseCases
+  
+- useClearTodos
+- useCreateTodo
+- useFetchTodos
+- useFetchUsers
+
+These use cases are implemented using react-query, a library for fetching and caching data in React applications.
+
+The Todo model has two data source implementations available: one using a REST API and the other using local storage.
+
+### Services
+
+- Http (Abstraction over axios)
+- Notification (Abstraction over alert)
+- Logger (Abstraction over console.log)
