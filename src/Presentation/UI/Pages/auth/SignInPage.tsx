@@ -1,6 +1,5 @@
 import {
 	Field,
-	FieldDescription,
 	FieldError,
 	FieldGroup,
 	FieldLabel,
@@ -14,23 +13,15 @@ import z from "zod";
 import bgAuth from "@/assets/bg-auth.svg";
 import { Link } from "react-router-dom";
 
-const schema = z
-	.object({
-		username: z.string().min(3, "Username minimal 3 karakter"),
-		email: z.string().email("Email tidak valid"),
-		password: z.string().min(6, "Password minimal 6 karakter"),
-		confirm_password: z.string().min(6, "Password minimal 6 karakter"),
-	})
-	.refine((data) => data.password === data.confirm_password, {
-		message: "Konfirmasi password harus sama",
-		path: ["confirm_password"],
-	});
+const schema = z.object({
+	email: z.string().email("Email tidak valid"),
+	password: z.string().min(6, "Password minimal 6 karakter"),
+});
 
 type SignUpForm = z.infer<typeof schema>;
 
 const SignInPage = () => {
 	const [showPassword, setShowPassword] = React.useState(false);
-	const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
 	const form = useForm<SignUpForm>({
 		resolver: zodResolver(schema),
 		defaultValues: {
@@ -59,8 +50,12 @@ const SignInPage = () => {
 				</Link>
 			</div>
 			<div className="w-[564px] bg-[#FFFFFF] rounded-xl">
-				<div className="py-14 px-8">
-					<div className="flex flex-col items-center justify-center pb-8">
+				<div className="pb-7 px-7 pt-14">
+					<div className="flex items-center justify-center size-16 mx-auto mb-7  bg-[#285F3E] rounded-xl text-white font-medium text-[36px]">
+						<i className="ri-login-box-line"></i>
+					</div>
+
+					<div className="flex flex-col items-center justify-center pb-7">
 						<h1 className="text-[32px] font-bold pb-1">Welcome Back!</h1>
 						<p className="text-[18px] font-normal">
 							Access your learning journey anytime, anywhere.
@@ -129,11 +124,17 @@ const SignInPage = () => {
 								/>
 							</FieldGroup>
 
-							<div className="pt-8">
+							<div className="py-5 text-right font-medium text-[18px]">
+								<Link to="/forgot-password">
+									<span>Forgot Password?</span>
+								</Link>
+							</div>
+
+							<div className="">
 								<Button
 									type="submit"
 									className="w-full h-[57px] bg-[#285F3E] hover:bg-[#285F3E]/90 text-[18px] font-medium rounded-xl cursor-pointer">
-									Submit
+									Sign In
 								</Button>
 							</div>
 						</form>
