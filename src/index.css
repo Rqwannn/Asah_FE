@@ -1,0 +1,36 @@
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&family=Poppins:wght@400;500;600;700&display=swap");
+
+@layer base {
+  :root {
+    background-color: #1f684a;
+  }
+
+  body {
+    font-family: "Poppins", sans-serif;
+    @apply antialiased;
+    min-height: 100vh;
+    margin: 0;
+    color: #111827;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+@layer utilities {
+  .font-poppins {
+    font-family: "Poppins", sans-serif;
+  }
+
+  .font-baloo {
+    font-family: "Baloo 2", cursive;
+  }
+}
+
+/* Hide native password reveal icon (e.g., Edge) to avoid duplicate toggle */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
