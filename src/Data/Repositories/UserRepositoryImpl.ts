@@ -1,15 +1,15 @@
-import { UserDataSource } from "../../Data/DataSources/UserDataSource";
-import { User } from "../../Domain/Models/User";
-import { UserRepository } from "../../Domain/Repositories/UserRepository";
+import { UserModel } from "../../Domain/Auth/Models/User";
+import { UserRepository } from "../../Domain/Auth/Repositories/UserRepository";
+import { UserDataSource } from "../DataSources/User/UserAPIDataSource";
 
 export class UserRepositoryImpl implements UserRepository {
-  datasource: UserDataSource;
+	datasource: UserDataSource;
 
-  constructor(datasource: UserDataSource) {
-    this.datasource = datasource;
-  }
+	constructor(datasource: UserDataSource) {
+		this.datasource = datasource;
+	}
 
-  async getUsers(): Promise<User[]> {
-    return await this.datasource.getUsers();
-  }
+	async getUsers(): Promise<UserModel[]> {
+		return await this.datasource.getUsers();
+	}
 }
