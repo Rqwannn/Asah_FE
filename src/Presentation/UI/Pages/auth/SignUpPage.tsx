@@ -449,7 +449,7 @@ const SignUpPage = () => {
 								}
 							}}
 							className="flex-1 h-[57px] bg-[#285F3E] hover:bg-[#285F3E]/90 disabled:bg-[#285F3E]/40 disabled:hover:bg-[#285F3E]/40 disabled:text-white/70 disabled:cursor-not-allowed disabled:opacity-60 text-[18px] font-medium rounded-xl cursor-pointer px-6">
-							{step < 3 ? "Next" : "Submit"}
+							{step < 3 ? "Next" : "Sign Up"}
 						</Button>
 					</div>
 				</div>
