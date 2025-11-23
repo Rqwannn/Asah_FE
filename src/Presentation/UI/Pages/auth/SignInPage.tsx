@@ -12,6 +12,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import bgAuth from "@/assets/bg-auth.svg";
 import { Link } from "react-router-dom";
+import { SignInRequestDTO } from "@/Data/DTOs/AuthDTO";
+import { useAuthFactory } from "@/App/Factories/useAuthFactory";
 
 const schema = z.object({
 	email: z.string().email("Email tidak valid"),
@@ -22,19 +24,24 @@ type SignUpForm = z.infer<typeof schema>;
 
 const SignInPage = () => {
 	const [showPassword, setShowPassword] = React.useState(false);
+	const { useSignIn } = useAuthFactory();
+	const { signIn, loading, error } = useSignIn();
 	const form = useForm<SignUpForm>({
 		resolver: zodResolver(schema),
 		defaultValues: {
 			email: "",
 			password: "",
 		},
-		mode: "onBlur",
+		mode: "onSubmit",
 		reValidateMode: "onChange",
 	});
 
-	const onSubmit = (values: SignUpForm) => {
+	const onSubmit = async (values: SignInRequestDTO) => {
 		// Integrasikan ke API/UseCase pendaftaran di sini
 		console.log("SignUp submit:", values);
+		const res = await signIn(values);
+
+		console.log(res);
 	};
 
 	return (
