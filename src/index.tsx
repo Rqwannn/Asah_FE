@@ -17,10 +17,6 @@ const router = createBrowserRouter([
 		element: <LandingPage />,
 	},
 	{
-		path: "/todos",
-		element: <TodosPage />,
-	},
-	{
 		path: "/signin",
 		element: <SignInPage />,
 	},
