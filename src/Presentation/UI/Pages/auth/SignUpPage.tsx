@@ -7,26 +7,117 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import bgAuth from "@/assets/bg-auth.svg";
 import { Link } from "react-router-dom";
 import RecomendationCard from "../../Components/RecomendationCard";
+import { SignUpRequestDTO } from "@/Data/DTOs/AuthDTO";
+import { useAuthFactory } from "@/App/Factories/useAuthFactory";
+
+const SKILLS = [
+	{
+		id: 1,
+		icon: '<i class="ri-brain-fill"></i>',
+		title: "Programming",
+		description:
+			"Learn how to build apps, websites, and solve problems through code.",
+	},
+	{
+		id: 2,
+		icon: '<i class="ri-lightbulb-fill"></i>',
+		title: "Design Thinking",
+		description:
+			"Discover creative ways to solve real-world challenges with user-centered design.",
+	},
+	{
+		id: 3,
+		icon: '<i class="ri-palette-fill"></i>',
+		title: "Graphic Design",
+		description:
+			"Master visual storytelling through colors, typography, and layout.",
+	},
+	{
+		id: 4,
+		icon: '<i class="ri-bar-chart-2-fill"></i>',
+		title: "Data Science",
+		description:
+			"Explore how to analyze data and turn insights into smart decisions.",
+	},
+	{
+		id: 5,
+		icon: '<i class="ri-discuss-fill"></i>',
+		title: "Communication Skills",
+		description:
+			"Improve how you express ideas clearly and connect with others effectively.",
+	},
+	{
+		id: 6,
+		icon: '<i class="ri-megaphone-fill"></i>',
+		title: "Digital Marketing",
+		description:
+			"Learn to grow brands and reach audiences using online strategies and analytics.",
+	},
+];
+
+const DISCOVERS = [
+	{
+		id: 1,
+		icon: '<i class="ri-global-fill"></i>',
+		title: "Search Engine (Google, Bing, etc.)",
+	},
+	{
+		id: 2,
+		icon: '<i class="ri-instagram-line"></i>',
+		title: "Social Media (Instagram, TikTok, Twitter, etc.)",
+	},
+	{
+		id: 3,
+		icon: '<i class="ri-group-fill"></i>',
+		title: "Friend or Colleague Recommendation",
+	},
+	{
+		id: 4,
+		icon: '<i class="ri-mail-fill"></i>',
+		title: "Email or Newsletter",
+	},
+	{
+		id: 5,
+		icon: '<i class="ri-smartphone-fill"></i>',
+		title: "Online Advertisement",
+	},
+	{
+		id: 6,
+		icon: '<i class="ri-book-fill"></i>',
+		title: "Blog or Article",
+	},
+	{
+		id: 7,
+		icon: '<i class="ri-graduation-cap-fill"></i>',
+		title: "School or University",
+	},
+	{
+		id: 8,
+		icon: '<i class="ri-more-fill"></i>',
+		title: "Other",
+	},
+];
 
 const schema = z
 	.object({
+		role: z.string(),
 		username: z.string().min(3, "Username minimal 3 karakter"),
 		email: z.string().email("Email tidak valid"),
 		password: z.string().min(6, "Password minimal 6 karakter"),
-		confirm_password: z.string().min(6, "Password minimal 6 karakter"),
+		confirmPassword: z.string().min(6, "Password minimal 6 karakter"),
 		skills: z.array(z.string()).min(1, "Pilih maksimal 1 skill"),
 		discovers: z.array(z.string()).min(1, "Pilih maksimal 1"),
 	})
-	.refine((data) => data.password === data.confirm_password, {
+	.refine((data) => data.password === data.confirmPassword, {
 		message: "Konfirmasi password harus sama",
-		path: ["confirm_password"],
+		path: ["confirmPassword"],
 	});
 
 type SignUpForm = z.infer<typeof schema>;
@@ -37,6 +128,38 @@ const SignUpPage = () => {
 	const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
 	const [selectedDiscovers, setSelectedDiscovers] = useState<string[]>([]);
 	const [step, setStep] = useState<number>(1);
+	const form = useForm<SignUpForm>({
+		resolver: zodResolver(schema),
+		defaultValues: {
+			role: "",
+			username: "",
+			email: "",
+			password: "",
+			confirmPassword: "",
+			skills: [],
+			discovers: [],
+		},
+		mode: "onBlur",
+		reValidateMode: "onChange",
+	});
+	// Penentuan disabled untuk tombol Next berdasarkan step saat ini
+	const watched = form.watch();
+	const isStep1Incomplete =
+		!watched.username ||
+		!watched.email ||
+		!watched.password ||
+		!watched.confirmPassword ||
+		watched.password !== watched.confirmPassword ||
+		!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(watched.email);
+	const isNextDisabled =
+		step === 1
+			? isStep1Incomplete
+			: step === 2
+			? selectedSkills.length === 0
+			: selectedDiscovers.length === 0;
+
+	const { useSignUp } = useAuthFactory();
+	const { signUp, loading, error } = useSignUp();
 
 	const handleSkillSelect = (title: string, checked: boolean) => {
 		setSelectedSkills((prev) => {
@@ -58,130 +181,16 @@ const SignUpPage = () => {
 		});
 	};
 
-	const form = useForm<SignUpForm>({
-		resolver: zodResolver(schema),
-		defaultValues: {
-			username: "",
-			email: "",
-			password: "",
-			confirm_password: "",
-			skills: [],
-			discovers: [],
-		},
-		mode: "onBlur",
-		reValidateMode: "onChange",
-	});
-
-	const SKILLS = [
-		{
-			id: 1,
-			icon: '<i class="ri-brain-fill"></i>',
-			title: "Programming",
-			description:
-				"Learn how to build apps, websites, and solve problems through code.",
-		},
-		{
-			id: 2,
-			icon: '<i class="ri-lightbulb-fill"></i>',
-			title: "Design Thinking",
-			description:
-				"Discover creative ways to solve real-world challenges with user-centered design.",
-		},
-		{
-			id: 3,
-			icon: '<i class="ri-palette-fill"></i>',
-			title: "Graphic Design",
-			description:
-				"Master visual storytelling through colors, typography, and layout.",
-		},
-		{
-			id: 4,
-			icon: '<i class="ri-bar-chart-2-fill"></i>',
-			title: "Data Science",
-			description:
-				"Explore how to analyze data and turn insights into smart decisions.",
-		},
-		{
-			id: 5,
-			icon: '<i class="ri-discuss-fill"></i>',
-			title: "Communication Skills",
-			description:
-				"Improve how you express ideas clearly and connect with others effectively.",
-		},
-		{
-			id: 6,
-			icon: '<i class="ri-megaphone-fill"></i>',
-			title: "Digital Marketing",
-			description:
-				"Learn to grow brands and reach audiences using online strategies and analytics.",
-		},
-	];
-
-	const DISCOVERS = [
-		{
-			id: 1,
-			icon: '<i class="ri-global-fill"></i>',
-			title: "Search Engine (Google, Bing, etc.)",
-		},
-		{
-			id: 2,
-			icon: '<i class="ri-instagram-line"></i>',
-			title: "Social Media (Instagram, TikTok, Twitter, etc.)",
-		},
-		{
-			id: 3,
-			icon: '<i class="ri-group-fill"></i>',
-			title: "Friend or Colleague Recommendation",
-		},
-		{
-			id: 4,
-			icon: '<i class="ri-mail-fill"></i>',
-			title: "Email or Newsletter",
-		},
-		{
-			id: 5,
-			icon: '<i class="ri-smartphone-fill"></i>',
-			title: "Online Advertisement",
-		},
-		{
-			id: 6,
-			icon: '<i class="ri-book-fill"></i>',
-			title: "Blog or Article",
-		},
-		{
-			id: 7,
-			icon: '<i class="ri-graduation-cap-fill"></i>',
-			title: "School or University",
-		},
-		{
-			id: 8,
-			icon: '<i class="ri-more-fill"></i>',
-			title: "Other",
-		},
-	];
-
-	const onSubmit = (values: SignUpForm) => {
+	const onSubmit = async (values: SignUpRequestDTO) => {
 		// Integrasikan ke API/UseCase pendaftaran di sini
 		console.log("SignUp submit:", values);
+		const res = await signUp(values);
+		console.log(res);
 	};
 
-	// Penentuan disabled untuk tombol Next berdasarkan step saat ini
-	const watched = form.watch();
-	const isStep1Incomplete =
-		!watched.username ||
-		!watched.email ||
-		!watched.password ||
-		!watched.confirm_password ||
-		watched.password !== watched.confirm_password ||
-		!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(watched.email);
-
-	const isNextDisabled =
-		step === 1
-			? isStep1Incomplete
-			: step === 2
-			? selectedSkills.length === 0
-			: selectedDiscovers.length === 0;
-
+	useEffect(() => {
+		form.setValue("role", "user");
+	}, []);
 	return (
 		<main
 			className="min-h-screen bg-[#285F3E] w-full flex flex-col items-center justify-center bg-no-repeat bg-cover bg-center relative"
@@ -300,7 +309,7 @@ const SignUpPage = () => {
 									/>
 
 									<Controller
-										name="confirm_password"
+										name="confirmPassword"
 										control={form.control}
 										render={({ field, fieldState }) => (
 											<Field data-invalid={fieldState.invalid}>
@@ -438,7 +447,7 @@ const SignUpPage = () => {
 										"username",
 										"email",
 										"password",
-										"confirm_password",
+										"confirmPassword",
 									]);
 									if (valid) setStep(2);
 								} else if (step === 2) {
