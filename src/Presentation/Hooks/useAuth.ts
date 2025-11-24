@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { SignInRequestDTO, SignUpRequestDTO } from "@/Data/DTOs/AuthDTO";
 import { SignInUseCase } from "@/Domain/Auth/UseCases/SignInUseCase";
 import { SignUpUseCase } from "@/Domain/Auth/UseCases/SignUpUseCase";
+import { LogoutUseCase } from "@/Domain/Auth/UseCases/LogoutUseCase";
 
 export const useSignIn = (signInUseCase: SignInUseCase) => {
 	const mutation = useMutation({
@@ -36,6 +37,21 @@ export const useSignUp = (signUpUseCase: SignUpUseCase) => {
 
 	return {
 		signUp: mutation.mutateAsync,
+		loading: mutation.isPending,
+		error: mutation.error,
+	};
+};
+
+export const useLogout = (logoutUseCase: LogoutUseCase) => {
+	const mutation = useMutation({
+		mutationFn: async () => {
+			const res = logoutUseCase.execute();
+			return res;
+		},
+	});
+
+	return {
+		logout: mutation.mutateAsync,
 		loading: mutation.isPending,
 		error: mutation.error,
 	};
