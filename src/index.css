@@ -13,6 +13,7 @@
 		margin: 0;
 		color: #111827;
 		@apply bg-background text-foreground;
+		
 	}
 
 	* {
