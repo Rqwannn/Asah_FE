@@ -4,9 +4,11 @@ import { Outlet } from "react-router-dom";
 
 const DashboardLayout = () => {
 	return (
-		<div className="relative min-h-screen ">
+		<div className="relative min-h-screen bg-[#F4F2EC]  pl-[152px] ">
 			<Navbar />
-			<Outlet />
+			<div className="">
+				<Outlet />
+			</div>
 		</div>
 	);
 };
