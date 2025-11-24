@@ -9,6 +9,7 @@ import SignInPage from "./Presentation/UI/Pages/Auth/SignInPage";
 import SignUpPage from "./Presentation/UI/Pages/Auth/SignUpPage";
 import DashboardLayout from "./Presentation/UI/Components/DashboardLayout";
 import DashboardPage from "./Presentation/UI/Pages/Dashboard/DashboardPage";
+import "remixicon/fonts/remixicon.css";
 
 const queryClient = new QueryClient();
 
