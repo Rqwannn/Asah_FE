@@ -44,7 +44,9 @@ export class AuthRepositoryImpl implements AuthRepository {
 		return new AuthSessionModel(res.data.accessToken, res.data.result);
 	}
 
-	async logout(): Promise<void> {}
+	async logout(): Promise<void> {
+		await this.datasource.logout();
+	}
 
 	async getCurrentSession(): Promise<AuthSessionModel | null> {
 		return null;
