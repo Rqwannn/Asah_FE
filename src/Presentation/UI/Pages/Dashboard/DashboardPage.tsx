@@ -47,7 +47,7 @@ const DashboardPage = () => {
 					<img
 						src={StarsImage}
 						alt=""
-						className="absolute right-0 top-0 w-32 md:w-48 pointer-events-none select-none"
+						className="absolute right-0 top-0 w-32 h-full md:w-48 pointer-events-none select-none"
 					/>
 
 					<div className="w-full md:w-2/3 gap-2 flex flex-col">
