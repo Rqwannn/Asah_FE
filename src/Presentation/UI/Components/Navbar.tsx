@@ -16,7 +16,7 @@ const Navbar = () => {
 				<img src={Icon} alt="" />
 			</div>
 			<div className="flex flex-col items-center gap-16">
-				<Link to={"/dashboard"}>
+				<Link to={"/"}>
 					<Button
 						variant={null}
 						size={"icon-lg"}
@@ -60,7 +60,7 @@ const Navbar = () => {
 			<div className="flex flex-col items-center ">
 				<Button
 					onClick={handleLogout}
-					variant={"link"}
+					variant={null}
 					size={"icon-lg"}
 					className="text-[28px] text-[#FFFFFF] cursor-pointer">
 					<i className="ri-logout-box-r-line"></i>
