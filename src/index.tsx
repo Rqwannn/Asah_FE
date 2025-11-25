@@ -8,22 +8,23 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import SignInPage from "./Presentation/UI/Pages/Auth/SignInPage";
 import SignUpPage from "./Presentation/UI/Pages/Auth/SignUpPage";
 import DashboardLayout from "./Presentation/UI/Components/DashboardLayout";
-import DashboardPage from "./Presentation/UI/Pages/Dashboard/DashboardPage";
 import "remixicon/fonts/remixicon.css";
+import CoursePage from "./Presentation/UI/Pages/Dashboard/CoursePage";
+import DashboardPage from "./Presentation/UI/Pages/Dashboard/DashboardPage";
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
 	{
-		path: "/",
-		element: <LandingPage />,
-	},
-	{
 		element: <DashboardLayout />,
 		children: [
 			{
-				path: "/dashboard",
+				path: "/",
 				element: <DashboardPage />,
+			},
+			{
+				path: "/course",
+				element: <CoursePage />,
 			},
 		],
 	},
