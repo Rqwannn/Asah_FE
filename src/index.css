@@ -13,7 +13,6 @@
 		margin: 0;
 		color: #111827;
 		@apply bg-background text-foreground;
-		
 	}
 
 	* {
@@ -29,6 +28,13 @@
 
 	.font-baloo {
 		font-family: "Baloo 2", cursive;
+	}
+
+	.line-clamp-2 {
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		overflow: hidden;
 	}
 }
 
@@ -250,4 +256,17 @@ input[type="password"]::-ms-clear {
 	--sidebar-border: oklch(1 0 0 / 10%);
 
 	--sidebar-ring: oklch(0.556 0 0);
+}
+
+@keyframes marquee {
+	0% {
+		transform: translateX(100%);
+	}
+	100% {
+		transform: translateX(-100%);
+	}
+}
+
+.animate-marquee {
+	animation: marquee 5s linear infinite;
 }
