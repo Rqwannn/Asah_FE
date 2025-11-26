@@ -19,7 +19,7 @@ const Navbar = () => {
 	const isActive = (path: string) => location.pathname === path;
 
 	return (
-		<div className="w-[132px] h-[852px] bg-[#285F3E] flex flex-col rounded-xl absolute left-5 top-5 bottom-5 justify-between p-11">
+		<div className="w-[132px] bg-[#285F3E] flex flex-col rounded-xl fixed left-5 top-5 bottom-5 justify-between p-11 z-50">
 			<div className="">
 				<img src={Icon} alt="" />
 			</div>
