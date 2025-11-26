@@ -25,8 +25,8 @@ const DashboardPage = () => {
 							👋
 						</div>
 						<div>
-							<h1 className="text-xl font-bold leading-tight">Welcome back, {user.username || "Learner"}!</h1>
-							<p className="text-white/80 text-xs">
+							<h1 className="text-[32px] leading-8 font-bold">Welcome back, {user.username || "Learner"}!</h1>
+							<p className="text-white/80">
 								Your AI learning insights are ready.
 							</p>
 						</div>
