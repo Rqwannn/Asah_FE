@@ -11,9 +11,10 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import bgAuth from "@/assets/bg-auth.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SignInRequestDTO } from "@/Data/DTOs/AuthDTO";
 import { useAuthFactory } from "@/App/Factories/useAuthFactory";
+import { useToast } from "@/components/ui/use-toast";
 
 const schema = z.object({
 	email: z.string().email("Email tidak valid"),
@@ -23,6 +24,7 @@ const schema = z.object({
 type SignUpForm = z.infer<typeof schema>;
 
 const SignInPage = () => {
+
 	const [showPassword, setShowPassword] = React.useState(false);
 	const { useSignIn } = useAuthFactory();
 	const { signIn, loading, error } = useSignIn();
@@ -36,12 +38,20 @@ const SignInPage = () => {
 		reValidateMode: "onChange",
 	});
 
-	const onSubmit = async (values: SignInRequestDTO) => {
-		// Integrasikan ke API/UseCase pendaftaran di sini
-		console.log("SignUp submit:", values);
-		const res = await signIn(values);
 
-		console.log(res);
+	const navigate = useNavigate();
+	const { toast } = useToast();
+
+	const onSubmit = async (values: SignInRequestDTO) => {
+		try {
+			const res = await signIn(values);
+			if (res) {
+				toast("Login successful! Welcome back.", "success");
+				navigate("/");
+			}
+		} catch (error) {
+			toast("Login failed. Please check your credentials.", "error");
+		}
 	};
 
 	return (
