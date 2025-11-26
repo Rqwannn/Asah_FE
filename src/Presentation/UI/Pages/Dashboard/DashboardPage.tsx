@@ -14,7 +14,7 @@ const DashboardPage = () => {
 			{/* Main Content */}
 			<div className="flex-1 px-8 py-6 overflow-y-auto mr-[310px]">
 				{/* Compact Welcome Banner */}
-				<div className="relative w-full bg-[#285F3E] rounded-xl overflow-hidden px-6 py-4 mb-5 flex items-center justify-between shadow-sm">
+				<div className="relative w-full bg-[#285F3E] rounded-xl overflow-hidden p-8 mb-5 flex items-center justify-between shadow-sm">
 					<img
 						src={StarsImage}
 						alt=""
