@@ -1,40 +1,16 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
+import { useParams } from "react-router-dom";
+import { useJourneyDetailFactory } from "@/App/Factories/useJourneyFactory";
 
 const CourseLearningPage = () => {
-	// Mock dynamic HTML content from backend
-	const contentHtml = `
-		<div style="padding: 20px; font-family: sans-serif;">
-			<h2>Introduction to UI/UX Design</h2>
-			<p>Welcome to the first lesson of the UI/UX Design course. In this video, we will cover the basics.</p>
-			<div style="margin-top: 20px; aspect-ratio: 16/9; background-color: #000; display: flex; align-items: center; justify-content: center; color: white;">
-				[Video Player Placeholder]
-			</div>
-			<h3 style="margin-top: 20px;">Key Concepts</h3>
-			<ul>
-				<li>User Interface (UI)</li>
-				<li>User Experience (UX)</li>
-				<li>Design Thinking</li>
-			</ul>
-			<p style="margin-top: 20px;">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-				Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-			</p>
-			<p>
-				Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-				Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-			</p>
-			<p>
-				Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam,
-				eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-			</p>
-		</div>
-	`;
+	const { id } = useParams<{ id: string }>();
+	const { data: journey, isLoading } = useJourneyDetailFactory(id || "");
 
-	// Mock Data for Nested Lessons
+	// Mock Data for Nested Lessons (Still mock for now as API doesn't seem to provide lessons structure yet)
 	const courseContent = [
 		{
 			id: 1,
@@ -45,23 +21,6 @@ const CourseLearningPage = () => {
 				{ id: 103, title: "Course Overview", duration: "3:15", isCompleted: false, isLocked: false },
 			]
 		},
-		{
-			id: 2,
-			title: "Chapter 2: Design Fundamentals",
-			subLessons: [
-				{ id: 201, title: "Color Theory", duration: "10:00", isCompleted: false, isLocked: true },
-				{ id: 202, title: "Typography Basics", duration: "8:45", isCompleted: false, isLocked: true },
-				{ id: 203, title: "Layout & Spacing", duration: "12:20", isCompleted: false, isLocked: true },
-			]
-		},
-		{
-			id: 3,
-			title: "Chapter 3: Wireframing",
-			subLessons: [
-				{ id: 301, title: "Low-Fidelity Wireframes", duration: "15:00", isCompleted: false, isLocked: true },
-				{ id: 302, title: "High-Fidelity Prototypes", duration: "20:00", isCompleted: false, isLocked: true },
-			]
-		}
 	];
 
 	const [expandedLessons, setExpandedLessons] = React.useState<number[]>([1]);
@@ -73,23 +32,31 @@ const CourseLearningPage = () => {
 		);
 	};
 
+	if (isLoading) {
+		return <div className="flex h-screen items-center justify-center">Loading...</div>;
+	}
+
+	if (!journey) {
+		return <div className="flex h-screen items-center justify-center">Journey not found</div>;
+	}
+
 	return (
 		<div className="flex  h-screen overflow-hidden bg-gray-50 relative">
 			{/* Main Content (Scrollable) */}
 			<div className="flex-1 overflow-y-auto h-full mr-[350px]">
-				<div className="px-13 bg-[#F4F2EC] py-8 w-full">
+				<div className="px-13 bg-[#F4F2EC] py-6 w-full">
 					{/* Header */}
 					<div className="flex justify-between items-center mb-6">
 						<div>
-							<h1 className="text-2xl font-bold text-[#1F2937]">Introduction to UI/UX Design</h1>
-							<p className="text-gray-500">Chapter 1: Understanding the Basics</p>
+							<h1 className="text-2xl font-bold text-[#1F2937]">{journey.name}</h1>
+							<p className="text-gray-500">{journey.summary}</p>
 						</div>
 						<div className="flex items-center gap-4">
 							<div className="flex flex-col items-end">
 								<span className="text-sm font-medium">Progress</span>
-								<span className="text-xs text-gray-500">20% Completed</span>
+								<span className="text-xs text-gray-500">{journey.progress_info?.percentage || 0}% Completed</span>
 							</div>
-							<Progress value={20} className="w-[100px]" />
+							<Progress value={journey.progress_info?.percentage || 0} className="w-[100px]" />
 						</div>
 					</div>
 
@@ -99,8 +66,8 @@ const CourseLearningPage = () => {
 					<Card className="min-h-[500px] bg-white shadow-sm border-none">
 						<CardContent className="p-0">
 							<div 
-								className="prose max-w-none"
-								dangerouslySetInnerHTML={{ __html: contentHtml }} 
+								className="prose max-w-none p-6"
+								dangerouslySetInnerHTML={{ __html: journey.description }} 
 							/>
 						</CardContent>
 					</Card>
@@ -116,7 +83,7 @@ const CourseLearningPage = () => {
 			<div className="w-[350px] absolute right-0 top-0 h-full bg-white border-l shadow-sm flex flex-col z-10">
 				<div className="p-6 border-b">
 					<h2 className="font-bold text-lg">Course Content</h2>
-					<p className="text-sm text-gray-500">5 Lessons • 1h 30m</p>
+					<p className="text-sm text-gray-500">{journey.hours_to_study} Hours • {journey.difficulty}</p>
 				</div>
 				<div className="flex-1 overflow-y-auto">
 					<div className="flex flex-col">
