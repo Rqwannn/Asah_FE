@@ -1,6 +1,5 @@
 import StarsImage from "@/assets/stars.svg";
 import { Button } from "@/components/ui/button";
-import ProfileImg from "@/assets/profile.svg";
 import { Progress } from "@/components/ui/progress";
 import {
 	Carousel,
@@ -11,38 +10,17 @@ import {
 } from "@/components/ui/carousel";
 import ProfileSidebar from "../../Components/ProfileSidebar";
 
+import { useJourneysFactory } from "@/App/Factories/useJourneyFactory";
+
 const CoursePage = () => {
-	const slides = [
-		{
-			category: "FRONTEND",
-			title: "Beginner's Guide to becoming a professional frontend developer",
-			progress: 50,
-		},
-		{
-			category: "BACKEND",
-			title: "Build robust APIs with Node.js and Express",
-			progress: 30,
-		},
-		{
-			category: "UI/UX",
-			title: "Design beautiful interfaces with practical principles",
-			progress: 70,
-		},
-		{
-			category: "DATABASE",
-			title: "Master relational modeling with PostgreSQL",
-			progress: 40,
-		},
-		{
-			category: "DEVOPS",
-			title: "Intro to CI/CD and deployment best practices",
-			progress: 20,
-		},
-	];
+	const { data: journeys, isLoading } = useJourneysFactory();
+	const { VITE_DICODING_ASSETS_URL } = import.meta.env;
+
+
 
 	return (
 		<>
-			<div className="px-13 py-8 mr-[310px] overflow-y-auto">
+			<div className="px-13 py-6 mr-[310px] overflow-y-auto">
 				{/* heading */}
 				<div className="p-6 relative w-full bg-[#285F3E] rounded-xl overflow-hidden min-h-[160px] md:min-h-[180px]">
 					<img
@@ -83,24 +61,36 @@ const CoursePage = () => {
 							</div>
 						</div>
 						<CarouselContent>
-							{slides.map((s, i) => (
+							{isLoading ? (
+								<div className="p-4 w-full text-center">Loading courses...</div>
+							) : journeys?.map((journey) => (
 								<CarouselItem
-									key={i}
+									key={journey.id}
 									className="basis-full sm:basis-1/2 lg:basis-1/3 p-1">
-									<div className="p-3 h-[240px] flex flex-col gap-3 bg-[#FFFFFF] rounded-xl border border-[#E5E7EB] shadow-xs">
-										<div className="w-full h-[115px] rounded-lg bg-[#EAEAEA]"></div>
+									<div className="p-3 h-[240px] flex flex-col gap-3 bg-[#FFFFFF] rounded-xl border border-[#E5E7EB] shadow-xs cursor-pointer hover:shadow-md transition-shadow"
+										onClick={() => window.location.href = `/course/${journey.id}`}
+									>
+										<div className="w-full h-[115px] rounded-lg bg-[#EAEAEA] overflow-hidden">
+											{journey.image_path ? (
+												<img src={VITE_DICODING_ASSETS_URL + journey.image_path} alt={journey.name} className="w-full h-full object-cover" />
+											) : (
+												<div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
+													<i className="ri-image-line text-2xl"></i>
+												</div>
+											)}
+										</div>
 										<div className="px-3 py-0.5 bg-[#285F3E]/10 rounded-full w-fit flex items-center">
 											<span className="text-[8px] font-normal text-[#285F3E] line-clamp-2">
-												{s.category}
+												{journey.difficulty}
 											</span>
 										</div>
 										<span className="text-[14px] font-medium text-[#202020] leading-5 line-clamp-2">
-											{s.title}
+											{journey.name}
 										</span>
 										<div className="flex items-center gap-2 mt-auto">
-											<Progress value={s.progress} />
+											<Progress value={journey.progress_info?.percentage || 0} />
 											<span className="text-[10px] text-[#202020]">
-												{s.progress}%
+												{journey.progress_info?.percentage || 0}%
 											</span>
 										</div>
 									</div>
