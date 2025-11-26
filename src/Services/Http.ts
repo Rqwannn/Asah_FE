@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
 export const axiosInstance = axios.create({
 	baseURL: "http://localhost:3000/api",
+	withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use((config) => {
@@ -55,8 +56,8 @@ axiosInstance.interceptors.response.use(
 			isRefreshing = true;
 
 			try {
-				const response = await axiosInstance.put<{ data: { accessToken: string } }>("/auth/refresh-token");
-				const { accessToken } = response.data.data;
+				const response = await axiosInstance.put<{ data: string }>("/auth/refresh-token");
+				const accessToken = response.data.data;
 
 				localStorage.setItem("accessToken", accessToken);
 				axiosInstance.defaults.headers.common["Authorization"] = "Bearer " + accessToken;
