@@ -1,0 +1,41 @@
+export interface JourneyDTO {
+    id: number;
+    name: string;
+    summary: string;
+    point: number;
+    required_point: number;
+    xp: number;
+    required_xp: number;
+    difficulty: string;
+    image_path: string;
+    status: string;
+    listed: boolean;
+    description: string;
+    logo_path: string;
+    banner_path: string | null;
+    platform_id: number;
+    instructor_id: number;
+    reviewer_id: number | null;
+    installment_plan_id: number | null;
+    deadline: string;
+    trial_deadline: string | null;
+    reviewer_incentive: string;
+    type: string;
+    discount: string;
+    discount_ends_at: string | null;
+    media_cover: string;
+    graduation: string;
+    position: number;
+    hours_to_study: number;
+    video_subtitle: string | null;
+    partner_logo: string | null;
+    teaching_methods: string[];
+    createdAt: string;
+    updatedAt: string;
+    progress_info: {
+        status: string;
+        percentage: number;
+        completed_count: number;
+        total_count: number;
+    };
+}
