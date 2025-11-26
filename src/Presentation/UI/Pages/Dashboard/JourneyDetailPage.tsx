@@ -3,13 +3,13 @@ import { Button } from "@/components/ui/button";
 import { useParams, useNavigate } from "react-router-dom";
 import { useJourneyDetailFactory } from "@/App/Factories/useJourneyFactory";
 import { Separator } from "@/components/ui/separator";
+import JourneyImage from "../../Components/JourneyImage";
 
 
 const JourneyDetailPage = () => {
 	const { id } = useParams<{ id: string }>();
 	const navigate = useNavigate();
 	const { data: journey, isLoading } = useJourneyDetailFactory(id || "");
-	const { VITE_DICODING_ASSETS_URL } = import.meta.env;
 
 	if (isLoading) {
 		return <div className="flex h-screen items-center justify-center">Loading...</div>;
@@ -42,10 +42,10 @@ const JourneyDetailPage = () => {
 						{/* Image */}
 						<div className="w-full md:w-[320px] h-[220px] rounded-2xl overflow-hidden bg-gray-100 shadow-md shrink-0">
 							{journey.image_path ? (
-								<img 
-									src={VITE_DICODING_ASSETS_URL + journey.image_path} 
-									alt={journey.name} 
-									className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" 
+								<JourneyImage
+									src={journey.image_path}
+									alt={journey.name}
+									className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
 								/>
 							) : (
 								<div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-50">
