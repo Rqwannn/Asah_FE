@@ -1,4 +1,3 @@
-import { UserList } from "../../User/UserList";
 import { Layout } from "../Components/Layout";
 
 export function LandingPage() {
