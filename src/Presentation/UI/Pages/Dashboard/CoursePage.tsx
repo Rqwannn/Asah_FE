@@ -19,7 +19,6 @@ const CoursePage = () => {
 	const { data: journeys, isLoading } = useJourneysFactory();
 	const [searchQuery, setSearchQuery] = useState("");
 
-
 	// Dummy data for Continue Learning
 	const continueLearningData = [
 		{
@@ -28,7 +27,7 @@ const CoursePage = () => {
 			image_path: "/images/react-patterns.jpg", // Placeholder, will fallback
 			difficulty: "Advanced",
 			progress: 65,
-			last_accessed: "2 hours ago"
+			last_accessed: "2 hours ago",
 		},
 		{
 			id: "dummy-2",
@@ -36,7 +35,7 @@ const CoursePage = () => {
 			image_path: "/images/node-micro.jpg",
 			difficulty: "Intermediate",
 			progress: 32,
-			last_accessed: "1 day ago"
+			last_accessed: "1 day ago",
 		},
 		{
 			id: "dummy-3",
@@ -44,11 +43,11 @@ const CoursePage = () => {
 			image_path: "/images/ui-ux.jpg",
 			difficulty: "Beginner",
 			progress: 88,
-			last_accessed: "3 days ago"
-		}
+			last_accessed: "3 days ago",
+		},
 	];
 
-	const filteredJourneys = journeys?.filter(journey =>
+	const filteredJourneys = journeys?.filter((journey) =>
 		journey.name.toLowerCase().includes(searchQuery.toLowerCase())
 	);
 
@@ -73,7 +72,9 @@ const CoursePage = () => {
 							Sharpen Your Skills With <br /> Professional Online Courses
 						</h1>
 
-						<Button variant={"secondary"} className="w-fit rounded-full mt-2 bg-white text-[#285F3E] hover:bg-gray-100 font-semibold shadow-md">
+						<Button
+							variant={"secondary"}
+							className="w-fit rounded-full mt-2 bg-white text-[#285F3E] hover:bg-gray-100 font-semibold shadow-md">
 							<span>Join now</span>
 							<i className="ri-play-circle-fill text-xl"></i>
 						</Button>
@@ -83,7 +84,9 @@ const CoursePage = () => {
 				{/* Continue Learning Section (Dummy Data) */}
 				<div className="mt-8 flex flex-col gap-4">
 					<div className="flex items-center justify-between">
-						<h2 className="text-xl font-bold text-[#202020]">Continue Learning</h2>
+						<h2 className="text-xl font-bold text-[#202020]">
+							Continue Learning
+						</h2>
 						<div className="flex items-center gap-2">
 							{/* Carousel controls can be custom if needed, or rely on default */}
 						</div>
@@ -91,11 +94,13 @@ const CoursePage = () => {
 					<Carousel className="w-full">
 						<CarouselContent className="-ml-4">
 							{continueLearningData.map((item) => (
-								<CarouselItem key={item.id} className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
+								<CarouselItem
+									key={item.id}
+									className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
 									<div className="group bg-white rounded-2xl border border-gray-100 p-3 shadow-sm hover:shadow-md transition-all cursor-pointer h-full flex flex-col gap-3">
 										<div className="w-full h-32 rounded-xl bg-gray-100 relative overflow-hidden">
 											{/* Placeholder for dummy images */}
-											<div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 text-gray-400">
+											<div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-gray-100 to-gray-200 text-gray-400">
 												<i className="ri-book-open-line text-4xl opacity-50"></i>
 											</div>
 											<div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-[10px] font-bold text-[#285F3E] shadow-sm">
@@ -106,14 +111,20 @@ const CoursePage = () => {
 											<h3 className="font-bold text-[#202020] line-clamp-1 group-hover:text-[#285F3E] transition-colors">
 												{item.name}
 											</h3>
-											<p className="text-xs text-gray-500">Last accessed {item.last_accessed}</p>
+											<p className="text-xs text-gray-500">
+												Last accessed {item.last_accessed}
+											</p>
 										</div>
 										<div className="mt-auto px-1 flex flex-col gap-1.5">
 											<div className="flex justify-between text-[10px] font-medium text-gray-500">
 												<span>Progress</span>
 												<span>{item.progress}%</span>
 											</div>
-											<Progress value={item.progress} className="h-1.5 bg-gray-100" indicatorClassName="bg-[#285F3E]" />
+											<Progress
+												value={item.progress}
+												className="h-1.5 bg-gray-100"
+												indicatorClassName="bg-[#285F3E]"
+											/>
 										</div>
 									</div>
 								</CarouselItem>
@@ -144,7 +155,9 @@ const CoursePage = () => {
 					{isLoading ? (
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 							{[1, 2, 3, 4, 5, 6].map((i) => (
-								<div key={i} className="h-[280px] bg-gray-100 rounded-2xl animate-pulse"></div>
+								<div
+									key={i}
+									className="h-[280px] bg-gray-100 rounded-2xl animate-pulse"></div>
 							))}
 						</div>
 					) : filteredJourneys?.length === 0 ? (
@@ -158,8 +171,9 @@ const CoursePage = () => {
 								<div
 									key={journey.id}
 									className="group bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col h-full"
-									onClick={() => window.location.href = `/course/${journey.id}`}
-								>
+									onClick={() =>
+										(window.location.href = `/course/${journey.id}`)
+									}>
 									<div className="w-full h-40 bg-gray-100 relative overflow-hidden">
 										{journey.image_path ? (
 											<JourneyImage
@@ -178,24 +192,31 @@ const CoursePage = () => {
 											</span>
 										</div>
 									</div>
-									
+
 									<div className="p-5 flex flex-col gap-3 flex-1">
 										<div className="flex flex-col gap-1">
 											<h3 className="text-lg font-bold text-[#202020] leading-snug line-clamp-2 group-hover:text-[#285F3E] transition-colors">
 												{journey.name}
 											</h3>
 											<p className="text-sm text-gray-500 line-clamp-2">
-												{journey.summary || "Master the fundamentals and advanced concepts in this comprehensive course."}
+												{journey.summary ||
+													"Master the fundamentals and advanced concepts in this comprehensive course."}
 											</p>
 										</div>
-										
+
 										<div className="mt-auto pt-2 flex items-center justify-between">
 											<div className="flex items-center gap-2 text-xs font-medium text-gray-500">
 												<i className="ri-book-open-line text-[#285F3E]"></i>
-												<span>{journey.teaching_methods?.length || 0} Modules</span>
+												<span>
+													{journey.teaching_methods?.length || 0} Modules
+												</span>
 											</div>
-											<Button size="sm" variant="ghost" className="h-8 rounded-full text-[#285F3E] hover:text-[#285F3E] hover:bg-[#285F3E]/10 px-3 text-xs font-bold">
-												Start Learning <i className="ri-arrow-right-line ml-1"></i>
+											<Button
+												size="sm"
+												variant="ghost"
+												className="h-8 rounded-full text-[#285F3E] hover:text-[#285F3E] hover:bg-[#285F3E]/10 px-3 text-xs font-bold">
+												Start Learning{" "}
+												<i className="ri-arrow-right-line ml-1"></i>
 											</Button>
 										</div>
 									</div>
