@@ -12,10 +12,11 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import bgAuth from "@/assets/bg-auth.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import RecomendationCard from "../../Components/RecomendationCard";
 import { SignUpRequestDTO } from "@/Data/DTOs/AuthDTO";
 import { useAuthFactory } from "@/App/Factories/useAuthFactory";
+import { useToast } from "@/components/ui/use-toast";
 
 const SKILLS = [
 	{
@@ -181,11 +182,19 @@ const SignUpPage = () => {
 		});
 	};
 
+	const navigate = useNavigate();
+	const { toast } = useToast();
+
 	const onSubmit = async (values: SignUpRequestDTO) => {
-		// Integrasikan ke API/UseCase pendaftaran di sini
-		console.log("SignUp submit:", values);
-		const res = await signUp(values);
-		console.log(res);
+		try {
+			const res = await signUp(values);
+			if (res) {
+				toast("Account created successfully! Welcome aboard.", "success");
+				navigate("/");
+			}
+		} catch (error) {
+			toast("Registration failed. Please try again.", "error");
+		}
 	};
 
 	useEffect(() => {
