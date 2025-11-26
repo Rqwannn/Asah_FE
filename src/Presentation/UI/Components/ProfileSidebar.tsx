@@ -7,7 +7,7 @@ const ProfileSidebar = () => {
 	const user = JSON.parse(localStorage.getItem("user") || "{}");
 
 	return (
-		<div className="bg-[#FFFFFF] h-full w-[310px] absolute right-0 top-0 px-6 py-8 border-l border-gray-100 flex flex-col gap-6 overflow-y-auto">
+		<div className="bg-[#FFFFFF] h-full w-[310px] fixed right-0 top-0 px-6 py-8 border-l border-gray-100 flex flex-col gap-6 overflow-y-auto z-50">
 			<div className="flex flex-col items-center gap-4">
 				<div>
 					<img
