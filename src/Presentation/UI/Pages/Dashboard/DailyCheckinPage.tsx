@@ -34,7 +34,7 @@ const DailyCheckinPage = () => {
     return (
         <div className="flex h-screen overflow-hidden bg-[#F4F2EC] relative">
             {/* Main Content */}
-            <div className="flex-1 px-13 py-8 overflow-y-auto w-full transition-all duration-300">
+            <div className="flex-1 px-13 py-6 overflow-y-auto w-full transition-all duration-300">
                 <div className="flex flex-col gap-6 md:gap-8">
                     
                     {/* Header */}
