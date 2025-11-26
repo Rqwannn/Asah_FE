@@ -11,6 +11,7 @@ import DashboardLayout from "./Presentation/UI/Components/DashboardLayout";
 import "remixicon/fonts/remixicon.css";
 import CoursePage from "./Presentation/UI/Pages/Dashboard/CoursePage";
 import CourseLearningPage from "./Presentation/UI/Pages/Dashboard/CourseLearningPage";
+import JourneyDetailPage from "./Presentation/UI/Pages/Dashboard/JourneyDetailPage";
 import DailyCheckinPage from "./Presentation/UI/Pages/Dashboard/DailyCheckinPage";
 import DashboardPage from "./Presentation/UI/Pages/Dashboard/DashboardPage";
 import ProtectedRoute from "./Presentation/UI/Components/ProtectedRoute";
@@ -34,7 +35,11 @@ const router = createBrowserRouter([
 						element: <CoursePage />,
 					},
 					{
-						path: "/course/learning",
+						path: "/course/:id",
+						element: <JourneyDetailPage />,
+					},
+					{
+						path: "/course/learning/:id",
 						element: <CourseLearningPage />,
 					},
 					{
