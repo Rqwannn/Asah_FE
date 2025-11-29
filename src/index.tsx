@@ -14,6 +14,7 @@ import CourseLearningPage from "./Presentation/UI/Pages/Dashboard/CourseLearning
 import JourneyDetailPage from "./Presentation/UI/Pages/Dashboard/JourneyDetailPage";
 import DailyCheckinPage from "./Presentation/UI/Pages/Dashboard/DailyCheckinPage";
 import DashboardPage from "./Presentation/UI/Pages/Dashboard/DashboardPage";
+import SettingsPage from "./Presentation/UI/Pages/Dashboard/Settings";
 import ProtectedRoute from "./Presentation/UI/Components/ProtectedRoute";
 import { ToastProvider } from "./components/ui/use-toast";
 
@@ -47,6 +48,15 @@ const router = createBrowserRouter([
 						element: <DailyCheckinPage />,
 					},
 				],
+			},
+		],
+	},
+	{
+		element: <DashboardLayout />,
+		children: [
+			{
+				path: "/settings",
+				element: <SettingsPage />,
 			},
 		],
 	},
