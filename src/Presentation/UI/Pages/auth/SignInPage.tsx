@@ -21,14 +21,13 @@ const schema = z.object({
 	password: z.string().min(6, "Password minimal 6 karakter"),
 });
 
-type SignUpForm = z.infer<typeof schema>;
+type SignInForm = z.infer<typeof schema>;
 
 const SignInPage = () => {
-
 	const [showPassword, setShowPassword] = React.useState(false);
 	const { useSignIn } = useAuthFactory();
 	const { signIn, loading, error } = useSignIn();
-	const form = useForm<SignUpForm>({
+	const form = useForm<SignInForm>({
 		resolver: zodResolver(schema),
 		defaultValues: {
 			email: "",
@@ -37,7 +36,6 @@ const SignInPage = () => {
 		mode: "onSubmit",
 		reValidateMode: "onChange",
 	});
-
 
 	const navigate = useNavigate();
 	const { toast } = useToast();
