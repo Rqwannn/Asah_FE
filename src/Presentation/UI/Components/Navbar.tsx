@@ -48,7 +48,7 @@ const Navbar = () => {
 						<i className={isActive("/profile") ? "ri-user-fill" : "ri-user-line"}></i>
 					</Button>
 				</Link>
-				<Link to={"/messages"}>
+				{/* <Link to={"/messages"}>
 					<Button
 						variant={null}
 						size={"icon-lg"}
@@ -63,7 +63,7 @@ const Navbar = () => {
 						className={`text-[32px] ${isActive("/settings") ? "text-[#FFFFFF]" : "text-[#FFFFFF]/70"} cursor-pointer`}>
 						<i className={isActive("/settings") ? "ri-settings-3-fill" : "ri-settings-3-line"}></i>
 					</Button>
-				</Link>
+				</Link> */}
 			</div>
 			<div className="flex flex-col items-center ">
 				<Button
