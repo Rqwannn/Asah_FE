@@ -87,31 +87,33 @@ const CourseTutorialPage = () => {
 	return (
 		<div className="flex h-screen overflow-hidden bg-gray-50 font-sans">
 			{/* Main Content Area */}
-			<div className="flex-1 flex flex-col h-full overflow-hidden mr-[400px]">
+			<div className="flex-1 flex flex-col h-full overflow-hidden mr-0 lg:mr-[350px] xl:mr-[400px] pt-14 lg:pt-0">
 				{/* Top Navigation Bar */}
-				<header className="bg-white border-b px-8 py-4 flex justify-between items-center shrink-0 z-10">
-					<div>
-						<h1 className="text-xl font-bold text-gray-900 truncate max-w-2xl">
-							{journey.name}
-						</h1>
-						<p className="text-sm text-gray-500 mt-1 line-clamp-1">
-							{journey.summary}
-						</p>
-					</div>
-					<div className="flex items-center gap-6">
-						<div className="flex flex-col items-end min-w-[140px]">
-							<div className="flex justify-between w-full mb-1.5">
-								<span className="text-xs font-semibold text-gray-700">
-									Course Progress
-								</span>
-								<span className="text-xs font-bold text-[#285F3E]">
-									{journey.progress_info?.percentage || 0}%
-								</span>
+				<header className="bg-white border-b px-4 sm:px-6 lg:px-8 py-3 sm:py-4 shrink-0 z-10">
+					<div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-3 lg:gap-6">
+						<div className="min-w-0 flex-1">
+							<h1 className="text-base sm:text-lg lg:text-xl font-bold text-gray-900 line-clamp-2 lg:line-clamp-1">
+								{journey.name}
+							</h1>
+							<p className="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-2 lg:line-clamp-1">
+								{journey.summary}
+							</p>
+						</div>
+						<div className="flex items-center gap-4 lg:gap-6 shrink-0">
+							<div className="flex flex-col items-start lg:items-end w-full lg:min-w-[140px]">
+								<div className="flex justify-between w-full mb-1.5">
+									<span className="text-xs font-semibold text-gray-700">
+										Course Progress
+									</span>
+									<span className="text-xs font-bold text-[#285F3E] ml-2">
+										{journey.progress_info?.percentage || 0}%
+									</span>
+								</div>
+								<Progress
+									value={journey.progress_info?.percentage || 0}
+									className="h-2 w-full bg-gray-100 [&>div]:bg-[#285F3E]"
+								/>
 							</div>
-							<Progress
-								value={journey.progress_info?.percentage || 0}
-								className="h-2 w-full bg-gray-100 [&>div]:bg-[#285F3E]"
-							/>
 						</div>
 					</div>
 				</header>
@@ -119,7 +121,7 @@ const CourseTutorialPage = () => {
 				{/* Scrollable Content */}
 				<main
 					ref={mainContentRef}
-					className="flex-1 overflow-y-auto p-8 bg-[#F9FAFB]">
+					className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-[#F9FAFB]">
 					<div className="max-w-4xl mx-auto">
 						<Card className="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
 							<CardContent className="p-0">
@@ -185,7 +187,7 @@ const CourseTutorialPage = () => {
 			</div>
 
 			{/* Sidebar (Fixed Right) */}
-			<aside className="w-[400px] absolute right-0 top-0 h-full bg-white border-l border-gray-200 flex flex-col z-20 shadow-xl shadow-gray-200/50">
+			<aside className="w-full lg:w-[350px] xl:w-[400px] absolute right-0 top-0 h-full bg-white border-l border-gray-200 hidden lg:flex flex-col z-20 shadow-xl shadow-gray-200/50">
 				<div className="p-6 border-b border-gray-100 bg-gray-50/50">
 					<h2 className="font-bold text-lg text-gray-900 flex items-center gap-2">
 						<BookOpen className="w-5 h-5 text-[#285F3E]" />
