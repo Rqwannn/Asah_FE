@@ -13,38 +13,15 @@ const JourneyImage = ({
 		VITE_DICODING_ASSETS_PRIMARY_URL,
 		VITE_DICODING_ASSETS_FALLBACK_URL,
 	} = import.meta.env;
-
-	// Robust sanitization
-	let cleanSrc = String(src || "").trim();
-
-	// Handle stringified arrays like '["url"]' or "['url']"
-	if (cleanSrc.startsWith("[") && cleanSrc.endsWith("]")) {
-		try {
-			const parsed = JSON.parse(cleanSrc.replace(/'/g, '"'));
-			if (Array.isArray(parsed) && parsed.length > 0) {
-				cleanSrc = parsed[0];
-			}
-		} catch (e) {
-			cleanSrc = cleanSrc.slice(1, -1);
-		}
-	}
-
-	// Remove ALL quotes of any type
-	cleanSrc = cleanSrc.replace(/['"`“”]+/g, "");
-
-	// Fix malformed protocol
-	cleanSrc = cleanSrc.replace(/^(https?):\/(?!\/)/, "$1://");
-
 	const [imgSrc, setImgSrc] = useState(
-		cleanSrc.startsWith("http")
-			? cleanSrc
-			: `${VITE_DICODING_ASSETS_PRIMARY_URL || ""}${cleanSrc}`
+		src.startsWith("http") ? src : `${VITE_DICODING_ASSETS_PRIMARY_URL}${src}`
 	);
 	const [hasError, setHasError] = useState(false);
 
 	const handleError = () => {
-		if (!hasError && !cleanSrc.startsWith("http")) {
-			setImgSrc(`${VITE_DICODING_ASSETS_FALLBACK_URL}${cleanSrc}`);
+		if (!hasError && !src.startsWith("http")) {
+			setImgSrc(`${VITE_DICODING_ASSETS_FALLBACK_URL}${src}`);
+			setHasError(true);
 		}
 	};
 
