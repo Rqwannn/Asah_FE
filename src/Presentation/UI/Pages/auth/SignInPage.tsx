@@ -56,7 +56,7 @@ const SignInPage = () => {
 		<main
 			className="min-h-screen bg-[#285F3E] w-full flex flex-col items-center justify-center bg-no-repeat bg-cover bg-center relative"
 			style={{ backgroundImage: `url(${bgAuth})` }}>
-			<div className="absolute right-[100px] top-[50px] flex gap-2 items-center">
+			<div className="absolute right-4 sm:right-8 lg:right-[100px] top-4 sm:top-8 lg:top-[50px] flex gap-2 items-center">
 				<p className="text-[16px] text-white font-regular">No Account yet? </p>
 				<Link to="/signup">
 					<Button className="rounded-none bg-[#C34F21] hover:bg-[#C34F21]/90 cursor-pointer">
@@ -64,15 +64,17 @@ const SignInPage = () => {
 					</Button>
 				</Link>
 			</div>
-			<div className="w-[564px] bg-[#FFFFFF] rounded-xl">
-				<div className="pb-7 px-7 pt-14">
-					<div className="flex items-center justify-center size-16 mx-auto mb-7  bg-[#285F3E] rounded-xl text-white font-medium text-[36px]">
+			<div className="w-full max-w-[90%] sm:max-w-md lg:max-w-lg bg-[#FFFFFF] rounded-lg sm:rounded-xl">
+				<div className="p-4 sm:p-6 lg:p-7 pt-8 sm:pt-12 lg:pt-14">
+					<div className="flex items-center justify-center size-12 sm:size-14 lg:size-16 mx-auto mb-5 sm:mb-6 lg:mb-7 bg-[#285F3E] rounded-lg sm:rounded-xl text-white font-medium text-2xl sm:text-3xl lg:text-[36px]">
 						<i className="ri-login-box-line"></i>
 					</div>
 
-					<div className="flex flex-col items-center justify-center pb-7">
-						<h1 className="text-[32px] font-bold pb-1">Welcome Back!</h1>
-						<p className="text-[18px] font-normal">
+					<div className="flex flex-col items-center justify-center pb-5 sm:pb-6 lg:pb-7">
+						<h1 className="text-2xl sm:text-3xl lg:text-[32px] font-bold pb-1">
+							Welcome Back!
+						</h1>
+						<p className="text-sm sm:text-base lg:text-[18px] font-normal text-center">
 							Access your learning journey anytime, anywhere.
 						</p>
 					</div>
@@ -139,7 +141,7 @@ const SignInPage = () => {
 								/>
 							</FieldGroup>
 
-							<div className="py-5 text-right font-medium text-[18px]">
+							<div className="py-3 sm:py-4 lg:py-5 text-right font-medium text-sm sm:text-base lg:text-[18px]">
 								<Link to="/forgot-password">
 									<span>Forgot Password?</span>
 								</Link>
@@ -148,7 +150,7 @@ const SignInPage = () => {
 							<div className="">
 								<Button
 									type="submit"
-									className="w-full h-[57px] bg-[#285F3E] hover:bg-[#285F3E]/90 text-[18px] font-medium rounded-xl cursor-pointer">
+									className="w-full h-12 sm:h-14 lg:h-[57px] bg-[#285F3E] hover:bg-[#285F3E]/90 text-sm sm:text-base lg:text-[18px] font-medium rounded-lg sm:rounded-xl cursor-pointer">
 									Sign In
 								</Button>
 							</div>
