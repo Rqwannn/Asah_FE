@@ -1,7 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
+const { VITE_BASE_URL } = import.meta.env;
+
 export const axiosInstance = axios.create({
-	baseURL: "http://localhost:3000/api",
+	baseURL: `${VITE_BASE_URL}/api`,
 	withCredentials: true,
 });
 
@@ -38,7 +40,11 @@ axiosInstance.interceptors.response.use(
 	async (error) => {
 		const originalRequest = error.config;
 
-		if (error.response && error.response.status === 401 && !originalRequest._retry) {
+		if (
+			error.response &&
+			error.response.status === 401 &&
+			!originalRequest._retry
+		) {
 			if (isRefreshing) {
 				return new Promise(function (resolve, reject) {
 					failedQueue.push({ resolve, reject });
@@ -56,13 +62,16 @@ axiosInstance.interceptors.response.use(
 			isRefreshing = true;
 
 			try {
-				const response = await axiosInstance.put<{ data: string }>("/auth/refresh-token");
+				const response = await axiosInstance.put<{ data: string }>(
+					"/auth/refresh-token"
+				);
 				const accessToken = response.data.data;
 
 				localStorage.setItem("accessToken", accessToken);
-				axiosInstance.defaults.headers.common["Authorization"] = "Bearer " + accessToken;
+				axiosInstance.defaults.headers.common["Authorization"] =
+					"Bearer " + accessToken;
 				processQueue(null, accessToken);
-				
+
 				originalRequest.headers["Authorization"] = "Bearer " + accessToken;
 				return axiosInstance(originalRequest);
 			} catch (err) {
