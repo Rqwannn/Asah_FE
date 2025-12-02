@@ -420,7 +420,7 @@ const SignUpPage = () => {
 					</div>
 				</div>
 
-				<div className="px-7 w-full pt-5 border-t-2 flex items-center justify-between gap-3">
+				<div className="lg:px-7 px-4 w-full pt-5 border-t-2 flex items-center justify-between gap-3">
 					{/* Step Indicator */}
 					<div
 						className="flex items-center gap-2"
@@ -435,7 +435,7 @@ const SignUpPage = () => {
 							/>
 						))}
 					</div>
-					<div className="w-1/2 flex gap-3">
+					<div className="lg:w-1/2 w-full flex gap-3">
 						<Button
 							type="button"
 							onClick={async () => {
