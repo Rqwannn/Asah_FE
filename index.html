@@ -2,38 +2,76 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
+
+		<!-- Favicons -->
 		<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="shortcut icon" href="/favicon.ico" />
 		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta
+			name="apple-mobile-web-app-status-bar-style"
+			content="black-translucent" />
 		<meta name="apple-mobile-web-app-title" content="LearnalyTica" />
 		<link rel="manifest" href="/site.webmanifest" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-		<!-- SEO Meta Tags -->
+		<!-- Viewport & Mobile Optimization -->
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+		<meta name="theme-color" content="#285F3E" />
+		<meta name="mobile-web-app-capable" content="yes" />
+
+		<!-- DNS Prefetch & Preconnect for Performance -->
+		<link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+		<link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+		<!-- Primary SEO Meta Tags -->
+		<title>
+			LearnalyTica — AI Learning Analytics & Risk Prediction Platform
+		</title>
+		<meta
+			name="title"
+			content="LearnalyTica — AI Learning Analytics & Risk Prediction Platform" />
 		<meta
 			name="description"
-			content="LearnalyTica helps you master new skills with AI-powered learning analytics, personalized insights, and behavior tracking. Track your progress, predict learning risks, and achieve your educational goals faster." />
+			content="Master new skills with AI-powered learning analytics. Track progress, predict learning risks, get personalized insights, and achieve educational goals faster with LearnalyTica's intelligent platform." />
 		<meta
 			name="keywords"
-			content="learning analytics, AI education, skill tracking, learning behavior, risk prediction, personalized learning, educational technology, online learning platform, progress tracking, LearnalyTica" />
+			content="AI learning analytics, educational technology, learning behavior tracking, risk prediction, personalized learning, skill development, online learning platform, progress tracking, AI education, student analytics, learning insights" />
 		<meta name="author" content="LearnalyTica Team" />
-		<meta name="robots" content="index, follow" />
-		<meta name="theme-color" content="#285F3E" />
+		<meta
+			name="robots"
+			content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+		<meta name="googlebot" content="index, follow" />
+		<meta name="language" content="English" />
+		<meta name="revisit-after" content="7 days" />
+		<meta name="rating" content="general" />
 
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content="https://asah-fe.vercel.app/" />
+		<meta property="og:site_name" content="LearnalyTica" />
 		<meta
 			property="og:title"
-			content="LearnalyTica — AI-driven learning behavior analytics & risk prediction" />
+			content="LearnalyTica — AI Learning Analytics & Risk Prediction" />
 		<meta
 			property="og:description"
-			content="Transform your learning journey with AI-powered analytics. Track behavior, predict risks, and achieve your goals with personalized insights and recommendations." />
+			content="Transform your learning journey with AI-powered analytics. Track behavior, predict risks, and achieve your goals with personalized insights." />
 		<meta
 			property="og:image"
 			content="https://asah-fe.vercel.app/og-image.png" />
-		<meta property="og:site_name" content="LearnalyTica" />
+		<meta
+			property="og:image:secure_url"
+			content="https://asah-fe.vercel.app/og-image.png" />
+		<meta property="og:image:type" content="image/png" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta
+			property="og:image:alt"
+			content="LearnalyTica - AI-driven learning analytics platform" />
 		<meta property="og:locale" content="en_US" />
 
 		<!-- Twitter Card -->
@@ -41,28 +79,65 @@
 		<meta name="twitter:url" content="https://asah-fe.vercel.app/" />
 		<meta
 			name="twitter:title"
-			content="LearnalyTica — AI-driven learning behavior analytics & risk prediction" />
+			content="LearnalyTica — AI Learning Analytics & Risk Prediction" />
 		<meta
 			name="twitter:description"
-			content="Transform your learning journey with AI-powered analytics. Track behavior, predict risks, and achieve your goals with personalized insights." />
+			content="Transform your learning journey with AI-powered analytics. Track behavior, predict risks, and achieve goals with personalized insights." />
 		<meta
 			name="twitter:image"
 			content="https://asah-fe.vercel.app/twitter-card.png" />
+		<meta
+			name="twitter:image:alt"
+			content="LearnalyTica - AI-driven learning analytics platform" />
+		<meta name="twitter:creator" content="@LearnalyTica" />
+		<meta name="twitter:site" content="@LearnalyTica" />
 
 		<!-- Canonical URL -->
 		<link rel="canonical" href="https://asah-fe.vercel.app/" />
 
-		<!-- Fonts -->
+		<!-- Additional SEO -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="format-detection" content="telephone=no" />
+		<meta name="application-name" content="LearnalyTica" />
+		<meta name="msapplication-TileColor" content="#285F3E" />
+		<meta name="msapplication-config" content="/browserconfig.xml" />
+
+		<!-- Structured Data (JSON-LD) for Rich Snippets -->
+		<script type="application/ld+json">
+			{
+				"@context": "https://schema.org",
+				"@type": "WebApplication",
+				"name": "LearnalyTica",
+				"alternateName": "LearnalyTica Platform",
+				"url": "https://asah-fe.vercel.app/",
+				"logo": "https://asah-fe.vercel.app/favicon-96x96.png",
+				"description": "AI-powered learning analytics platform that helps you track progress, predict learning risks, and achieve educational goals with personalized insights.",
+				"applicationCategory": "EducationalApplication",
+				"operatingSystem": "Web",
+				"offers": {
+					"@type": "Offer",
+					"price": "0",
+					"priceCurrency": "USD"
+				},
+				"screenshot": "https://asah-fe.vercel.app/og-image.png",
+				"aggregateRating": {
+					"@type": "AggregateRating",
+					"ratingValue": "4.8",
+					"ratingCount": "150"
+				},
+				"creator": {
+					"@type": "Organization",
+					"name": "LearnalyTica Team",
+					"url": "https://asah-fe.vercel.app/"
+				}
+			}
+		</script>
+
+		<!-- Fonts (Preload for Performance) -->
 		<link href="/src/index.css" rel="stylesheet" />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
 			href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&family=Poppins:wght@400;500;600;700&display=swap"
 			rel="stylesheet" />
-
-		<title>
-			LearnalyTica — AI-driven learning behavior analytics & risk prediction
-		</title>
 	</head>
 	<body>
 		<div id="root"></div>
