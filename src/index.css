@@ -37,6 +37,21 @@
 		-webkit-line-clamp: 2;
 		overflow: hidden;
 	}
+
+	/* Responsive Container */
+	.container-responsive {
+		@apply w-full mx-auto px-4 sm:px-6 lg:px-8;
+	}
+
+	/* Hide scrollbar but keep functionality */
+	.scrollbar-hide {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+
+	.scrollbar-hide::-webkit-scrollbar {
+		display: none;
+	}
 }
 
 /* Hide native password reveal icon (e.g., Edge) to avoid duplicate toggle */
