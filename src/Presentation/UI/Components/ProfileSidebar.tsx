@@ -7,7 +7,7 @@ const ProfileSidebar = () => {
 	const user = JSON.parse(localStorage.getItem("user") || "{}");
 
 	return (
-		<div className="bg-[#FFFFFF] h-full w-[310px] fixed right-0 top-0 px-6 py-8 border-l border-gray-100 flex flex-col gap-6 overflow-y-auto z-50">
+		<div className="bg-[#FFFFFF] h-full w-full md:w-[280px] lg:w-[310px] fixed right-0 top-0 px-4 py-6 md:px-5 lg:px-6 md:py-6 lg:py-8 border-l border-gray-100 hidden lg:flex flex-col gap-4 md:gap-5 lg:gap-6 overflow-y-auto scrollbar-hide z-50">
 			<div className="flex flex-col items-center gap-4">
 				<div>
 					<img
@@ -18,7 +18,9 @@ const ProfileSidebar = () => {
 				</div>
 
 				<div className="flex flex-col gap-1 items-center w-full">
-					<h1 className="text-[16px] font-bold leading-8 text-gray-900">{user.username || "Guest User"}</h1>
+					<h1 className="text-[16px] font-bold leading-8 text-gray-900">
+						{user.username || "Guest User"}
+					</h1>
 
 					<div className="w-full bg-[#F4F2EC] rounded-lg overflow-hidden py-1">
 						<span className="text-[12px] whitespace-nowrap inline-block w-full animate-marquee font-medium text-[#000000] text-center">
@@ -63,10 +65,14 @@ const ProfileSidebar = () => {
 
 				<div className="w-full flex flex-col gap-4 mt-2">
 					<div className="flex items-center justify-between">
-						<span className="font-bold text-[14px] text-gray-900">Your Courses</span>
-						<span className="text-[12px] text-[#285F3E] font-medium cursor-pointer hover:underline">See all</span>
+						<span className="font-bold text-[14px] text-gray-900">
+							Your Courses
+						</span>
+						<span className="text-[12px] text-[#285F3E] font-medium cursor-pointer hover:underline">
+							See all
+						</span>
 					</div>
-					
+
 					{/* Course List */}
 					<div className="flex flex-col gap-4">
 						{Array.from({ length: 3 }).map((_, i) => (
