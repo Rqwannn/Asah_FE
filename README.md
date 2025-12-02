@@ -1,4 +1,4 @@
-# Clean Architecture React Asah
+# Clean Architecture React
 
 This project is an experiment in applying clean architecture with React.
 
