@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import Icon from "@/assets/icon.svg";
+import Icon from "@/assets/icon.png";
 import ProfileImg from "@/assets/profile.svg";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuthFactory } from "@/App/Factories/useAuthFactory";
@@ -43,7 +43,7 @@ const Navbar = () => {
 			{/* Mobile Top Navbar */}
 			<div className="lg:hidden fixed top-0 left-0 right-0 bg-[#285F3E] flex items-center justify-between px-4 py-3 z-50 border-b border-[#1e462e]">
 				<Link to={"/"}>
-					<img src={Icon} alt="" className="w-8 h-8" />
+					<img src={Icon} alt="" className="w-10 h-10 rounded-lg" />
 				</Link>
 
 				<div className="flex items-center gap-6">
