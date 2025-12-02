@@ -12,7 +12,7 @@ const DashboardPage = () => {
 	return (
 		<div className="flex h-screen overflow-hidden">
 			{/* Main Content */}
-			<div className="flex-1 px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 pt-16 lg:pt-6 overflow-y-auto mr-0 lg:mr-[280px] xl:mr-[310px]">
+			<div className="flex-1 px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 pt-20 lg:pt-6 overflow-y-auto mr-0 lg:mr-[280px] xl:mr-[310px]">
 				{/* Compact Welcome Banner */}
 				<div className="relative w-full bg-[#285F3E] rounded-lg sm:rounded-xl overflow-hidden p-4 sm:p-6 lg:p-8 mb-4 sm:mb-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 shadow-sm">
 					<img
@@ -141,7 +141,7 @@ const DashboardPage = () => {
 				</div>
 
 				{/* AI Recommendations - Horizontal */}
-				<Card className="border-none shadow-sm bg-white mb-4 sm:mb-5">
+				<Card className="border-none shadow-sm bg-white ">
 					<CardHeader className="pb-2 pt-3 sm:pt-4 px-3 sm:px-4">
 						<CardTitle className="flex items-center gap-2 text-[16px] font-semibold text-[#285F3E]">
 							<i className="ri-sparkling-fill"></i> Recommended for You
