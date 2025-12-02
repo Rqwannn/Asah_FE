@@ -158,7 +158,7 @@ const DailyCheckinPage = () => {
 		<div className="flex h-screen overflow-hidden">
 			{/* Main Content */}
 			<div className="flex-1">
-				<div className="h-full px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 pt-16 lg:pt-6 mr-0 lg:mr-[280px] xl:mr-[310px] overflow-y-auto">
+				<div className="h-full px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 pt-20 lg:pt-6 mr-0 lg:mr-[280px] xl:mr-[310px] overflow-y-auto">
 					<div className="flex flex-col gap-4 sm:gap-5 lg:gap-6">
 						{/* Header */}
 						<div className="flex flex-col gap-1">
