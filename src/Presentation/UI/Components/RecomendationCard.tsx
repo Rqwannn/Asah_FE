@@ -44,7 +44,7 @@ const RecomendationCard = ({
 		<div
 			role="button"
 			tabIndex={0}
-			className={`relative cursor-pointer flex flex-col items-center gap-1 py-5 px-3 rounded-2xl border-[1.5px]  ${
+			className={`relative cursor-pointer flex flex-col items-center gap-1 py-2 sm:py-3 lg:py-4 px-3 rounded-2xl border-[1.5px]  ${
 				checked ? "border-[#285F3E] " : "border-gray-200"
 			}`}
 			onClick={handleContainerClick}
