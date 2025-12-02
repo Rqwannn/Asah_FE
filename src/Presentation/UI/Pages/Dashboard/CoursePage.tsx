@@ -98,7 +98,7 @@ const CoursePage = () => {
 
 	return (
 		<>
-			<div className="h-full px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 pt-16 lg:pt-6 mr-0 lg:mr-[280px] xl:mr-[310px] overflow-y-auto">
+			<div className="h-full px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 pt-20 lg:pt-6 mr-0 lg:mr-[280px] xl:mr-[310px] overflow-y-auto">
 				{/* Heading */}
 				<div className="p-4 sm:p-6 lg:p-8 relative w-full bg-[#285F3E] rounded-xl lg:rounded-2xl overflow-hidden min-h-[140px] sm:min-h-[160px] lg:min-h-[180px] flex items-center shadow-lg shadow-[#285F3E]/20">
 					<img
