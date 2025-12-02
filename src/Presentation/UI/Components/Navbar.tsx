@@ -121,7 +121,7 @@ const Navbar = () => {
 			{/* Desktop Sidebar Navbar */}
 			<div className="hidden lg:flex w-20 xl:w-[132px] bg-[#285F3E] flex-col rounded-lg xl:rounded-xl fixed left-2 xl:left-3 2xl:left-5 top-2 xl:top-3 2xl:top-5 bottom-2 xl:bottom-3 2xl:bottom-5 justify-between p-3 xl:p-6 2xl:p-8 z-50">
 				<div className="flex justify-center">
-					<img src={Icon} alt="" className="w-10 xl:w-12" />
+					<img src={Icon} alt="" className="w-10 xl:w-12 rounded-lg" />
 				</div>
 				<div className="flex flex-col items-center gap-8 xl:gap-12 2xl:gap-16">
 					<Link to={"/"}>
