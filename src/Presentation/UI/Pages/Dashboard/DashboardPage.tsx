@@ -12,20 +12,20 @@ const DashboardPage = () => {
 	return (
 		<div className="flex h-screen overflow-hidden">
 			{/* Main Content */}
-			<div className="flex-1 px-8 py-6 overflow-y-auto mr-[310px]">
+			<div className="flex-1 px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 pt-20 lg:pt-6 overflow-y-auto mr-0 lg:mr-[280px] xl:mr-[310px]">
 				{/* Compact Welcome Banner */}
-				<div className="relative w-full bg-[#285F3E] rounded-xl overflow-hidden p-8 mb-5 flex items-center justify-between shadow-sm">
+				<div className="relative w-full bg-[#285F3E] rounded-lg sm:rounded-xl overflow-hidden p-4 sm:p-6 lg:p-8 mb-4 sm:mb-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 shadow-sm">
 					<img
 						src={StarsImage}
 						alt=""
 						className="absolute right-0 top-0 h-full opacity-20 pointer-events-none select-none"
 					/>
-					<div className="relative z-10 text-white flex items-center gap-4">
-						<div className="size-10 rounded-full bg-white/20 flex items-center justify-center text-xl">
+					<div className="relative z-10 text-white flex items-center gap-3 sm:gap-4">
+						<div className="size-8 sm:size-10 rounded-full bg-white/20 flex items-center justify-center text-lg sm:text-xl">
 							👋
 						</div>
 						<div>
-							<h1 className="text-[32px] leading-8 font-bold">
+							<h1 className="text-xl sm:text-2xl lg:text-[32px] leading-tight font-bold">
 								Welcome back, {user.username || "Learner"}!
 							</h1>
 							<p className="text-white/80">
@@ -42,10 +42,10 @@ const DashboardPage = () => {
 				</div>
 
 				{/* 3-Column Grid for Stats */}
-				<div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5">
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-5">
 					{/* Weekly Focus */}
 					<Card className="border-none shadow-sm bg-white">
-						<CardHeader className="pb-2 pt-4 px-4">
+						<CardHeader className="pb-2 pt-3 sm:pt-4 px-3 sm:px-4">
 							<CardTitle className="flex items-center gap-2 text-[16px] font-semibold text-[#285F3E]">
 								<i className="ri-focus-3-line"></i> Weekly Focus
 							</CardTitle>
@@ -141,8 +141,8 @@ const DashboardPage = () => {
 				</div>
 
 				{/* AI Recommendations - Horizontal */}
-				<Card className="border-none shadow-sm bg-white mb-5">
-					<CardHeader className="pb-2 pt-4 px-4">
+				<Card className="border-none shadow-sm bg-white ">
+					<CardHeader className="pb-2 pt-3 sm:pt-4 px-3 sm:px-4">
 						<CardTitle className="flex items-center gap-2 text-[16px] font-semibold text-[#285F3E]">
 							<i className="ri-sparkling-fill"></i> Recommended for You
 						</CardTitle>

@@ -204,7 +204,7 @@ const SignUpPage = () => {
 		<main
 			className="min-h-screen bg-[#285F3E] w-full flex flex-col items-center justify-center bg-no-repeat bg-cover bg-center relative"
 			style={{ backgroundImage: `url(${bgAuth})` }}>
-			<div className="absolute right-[100px] top-[50px] flex gap-2 items-center">
+			<div className="absolute right-4 sm:right-8 lg:right-[100px] top-4 sm:top-8 lg:top-[50px] flex gap-2 items-center">
 				<p className="text-[16px] text-white font-regular">
 					Already have an account?{" "}
 				</p>
@@ -214,9 +214,9 @@ const SignUpPage = () => {
 					</Button>
 				</Link>
 			</div>
-			<div className="w-[564px] bg-[#FFFFFF] rounded-xl overflow-x-hidden py-5">
+			<div className="w-full max-w-[90%] sm:max-w-md lg:max-w-lg bg-[#FFFFFF] rounded-lg sm:rounded-xl overflow-x-hidden py-4 sm:py-5">
 				<div
-					className={`flex w-[300%] h-[500px] min-h-0 transition-transform duration-500 ease-in-out ${
+					className={`flex w-[300%] h-[430px] sm:h-[480px] lg:h-[500px] min-h-0 transition-transform duration-500 ease-in-out ${
 						step === 1
 							? "translate-x-0"
 							: step === 2
@@ -226,16 +226,16 @@ const SignUpPage = () => {
 					<div
 						className={`flex flex-col w-1/3 shrink-0 h-full min-h-0`}
 						id="section1">
-						<div className="flex flex-col items-center justify-center pb-5 border-b-2 ">
-							<h1 className="text-[32px] font-bold pb-1">
+						<div className="flex flex-col items-center justify-center pb-4 sm:pb-5 border-b-2 ">
+							<h1 className="text-2xl sm:text-3xl lg:text-[32px] font-bold pb-1">
 								Create Your Account
 							</h1>
-							<p className="text-[18px] font-normal">
+							<p className="text-sm sm:text-base lg:text-[18px] font-normal text-center px-4">
 								Start learning and growing with us today.
 							</p>
 						</div>
 
-						<div className="flex-1 p-7 overflow-y-auto">
+						<div className="flex-1 p-4 sm:p-6 lg:p-7 overflow-y-auto">
 							<form id="form-signup" onSubmit={form.handleSubmit(onSubmit)}>
 								<FieldGroup>
 									<Controller
@@ -366,17 +366,17 @@ const SignUpPage = () => {
 					<div
 						id="section2"
 						className="flex flex-col w-1/3 shrink-0 h-full min-h-0 flex-nowrap">
-						<div className="flex flex-col items-start justify-center px-7 pb-5 border-b-2">
-							<h1 className="text-[32px] font-bold pb-1">
+						<div className="flex flex-col items-start justify-center px-4 sm:px-6 lg:px-7 pb-4 sm:pb-5 border-b-2">
+							<h1 className="text-2xl sm:text-3xl lg:text-[32px] font-bold pb-1">
 								Tell us more about you ✨
 							</h1>
-							<p className="text-[18px] font-normal">
+							<p className="text-sm sm:text-base lg:text-[18px] font-normal">
 								What subjects or skills are you interested in learning?
 							</p>
 						</div>
 
 						<div
-							className={`flex-1 min-h-0 grid grid-cols-2 gap-3 p-7 overflow-y-auto`}>
+							className={`flex-1 min-h-0 grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 p-4 sm:p-6 lg:p-7 overflow-y-auto`}>
 							{SKILLS.map((skill, ii) => {
 								return (
 									<RecomendationCard
@@ -398,13 +398,13 @@ const SignUpPage = () => {
 							<h1 className="text-[32px] font-bold pb-1">
 								Tell us more about you ✨
 							</h1>
-							<p className="text-[18px] font-normal">
+							<p className="text-sm sm:text-base lg:text-[18px] font-normal">
 								How did you discover this website?
 							</p>
 						</div>
 
 						<div
-							className={`flex-1 min-h-0 grid grid-cols-2 gap-3 p-7 overflow-y-auto`}>
+							className={`flex-1 min-h-0 grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 p-4 sm:p-6 lg:p-7 overflow-y-auto`}>
 							{DISCOVERS.map((discover, ii) => {
 								return (
 									<RecomendationCard
@@ -420,7 +420,7 @@ const SignUpPage = () => {
 					</div>
 				</div>
 
-				<div className="px-7 w-full pt-5 border-t-2 flex items-center justify-between gap-3">
+				<div className="lg:px-7 px-4 w-full pt-5 border-t-2 flex items-center justify-between gap-3">
 					{/* Step Indicator */}
 					<div
 						className="flex items-center gap-2"
@@ -435,13 +435,13 @@ const SignUpPage = () => {
 							/>
 						))}
 					</div>
-					<div className="w-1/2 flex gap-3">
+					<div className="lg:w-1/2 w-full flex gap-3">
 						<Button
 							type="button"
 							onClick={async () => {
 								setStep(step - 1);
 							}}
-							className={`h-[57px] bg-[#FFFFFF] hover:bg-[#F5F5F5] text-[#285F3E] border border-[#285F3E] text-[18px] font-medium rounded-xl cursor-pointer px-6 ${
+							className={`h-12 sm:h-14 lg:h-[57px] bg-[#FFFFFF] hover:bg-[#F5F5F5] text-[#285F3E] border border-[#285F3E] text-sm sm:text-base lg:text-[18px] font-medium rounded-lg sm:rounded-xl cursor-pointer px-4 sm:px-6 ${
 								step > 1 ? "flex-1" : "hidden"
 							}`}>
 							Previous
@@ -466,7 +466,7 @@ const SignUpPage = () => {
 									form.handleSubmit(onSubmit)();
 								}
 							}}
-							className="flex-1 h-[57px] bg-[#285F3E] hover:bg-[#285F3E]/90 disabled:bg-[#285F3E]/40 disabled:hover:bg-[#285F3E]/40 disabled:text-white/70 disabled:cursor-not-allowed disabled:opacity-60 text-[18px] font-medium rounded-xl cursor-pointer px-6">
+							className="flex-1 h-12 sm:h-14 lg:h-[57px] bg-[#285F3E] hover:bg-[#285F3E]/90 disabled:bg-[#285F3E]/40 disabled:hover:bg-[#285F3E]/40 disabled:text-white/70 disabled:cursor-not-allowed disabled:opacity-60 text-sm sm:text-base lg:text-[18px] font-medium rounded-lg sm:rounded-xl cursor-pointer px-4 sm:px-6">
 							{step < 3 ? "Next" : "Sign Up"}
 						</Button>
 					</div>

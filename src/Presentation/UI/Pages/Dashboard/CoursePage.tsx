@@ -98,28 +98,29 @@ const CoursePage = () => {
 
 	return (
 		<>
-			<div className="h-full px-8 py-6 mr-[310px] overflow-y-auto">
+			<div className="h-full px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 pt-20 lg:pt-6 mr-0 lg:mr-[280px] xl:mr-[310px] overflow-y-auto">
 				{/* Heading */}
-				<div className="p-8 relative w-full bg-[#285F3E] rounded-2xl overflow-hidden min-h-[180px] flex items-center shadow-lg shadow-[#285F3E]/20">
+				<div className="p-4 sm:p-6 lg:p-8 relative w-full bg-[#285F3E] rounded-xl lg:rounded-2xl overflow-hidden min-h-[140px] sm:min-h-[160px] lg:min-h-[180px] flex items-center shadow-lg shadow-[#285F3E]/20">
 					<img
 						src={StarsImage}
 						alt=""
 						className="absolute right-0 top-0 h-full w-auto object-cover opacity-80 pointer-events-none select-none mix-blend-overlay"
 					/>
 
-					<div className="w-full md:w-3/4 gap-3 flex flex-col relative z-10">
+					<div className="w-full md:w-3/4 gap-2 sm:gap-3 flex flex-col relative z-10">
 						<div className="flex items-center gap-2">
-							<span className="px-2 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-bold tracking-wider uppercase backdrop-blur-sm">
+							<span className="px-2 py-0.5 rounded-full bg-white/20 text-white text-[9px] sm:text-[10px] font-bold tracking-wider uppercase backdrop-blur-sm">
 								Online Course
 							</span>
 						</div>
-						<h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight">
+						<h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight">
 							Sharpen Your Skills With <br /> Professional Online Courses
 						</h1>
 
 						<Button
 							variant={"secondary"}
-							className="w-fit rounded-full mt-2 bg-white text-[#285F3E] hover:bg-gray-100 font-semibold shadow-md">
+							size="sm"
+							className="w-fit rounded-full mt-1 sm:mt-2 bg-white text-[#285F3E] hover:bg-gray-100 font-semibold shadow-md text-xs sm:text-sm">
 							<span>Join now</span>
 							<i className="ri-play-circle-fill text-xl"></i>
 						</Button>
@@ -128,9 +129,9 @@ const CoursePage = () => {
 
 				{/* Continue Learning Section */}
 				{continueLearningJourneys.length > 0 && (
-					<div className="mt-8 flex flex-col gap-4">
+					<div className="mt-6 sm:mt-8 flex flex-col gap-3 sm:gap-4">
 						<div className="flex items-center justify-between">
-							<h2 className="text-xl font-bold text-[#202020]">
+							<h2 className="text-lg sm:text-xl font-bold text-[#202020]">
 								Continue Learning
 							</h2>
 							<div className="flex items-center gap-2">
@@ -196,9 +197,11 @@ const CoursePage = () => {
 				)}
 
 				{/* All Journeys Section */}
-				<div className="mt-8 flex flex-col gap-6">
-					<div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-						<h2 className="text-xl font-bold text-[#202020]">All Journeys</h2>
+				<div className="mt-6 sm:mt-8 flex flex-col gap-4 sm:gap-6">
+					<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+						<h2 className="text-lg sm:text-xl font-bold text-[#202020]">
+							All Journeys
+						</h2>
 						<div className="relative w-full md:w-72">
 							<i className="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
 							<Input
@@ -224,7 +227,7 @@ const CoursePage = () => {
 							<p>No courses found matching "{searchQuery}"</p>
 						</div>
 					) : (
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
 							{filteredJourneys?.map((journey) => (
 								<JourneyCard key={journey.id} journey={journey} />
 							))}
