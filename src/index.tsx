@@ -47,16 +47,11 @@ const router = createBrowserRouter([
 						path: "/daily-checkin",
 						element: <DailyCheckinPage />,
 					},
+					{
+						path: "/settings",
+						element: <SettingsPage />,
+					},
 				],
-			},
-		],
-	},
-	{
-		element: <DashboardLayout />,
-		children: [
-			{
-				path: "/settings",
-				element: <SettingsPage />,
 			},
 		],
 	},

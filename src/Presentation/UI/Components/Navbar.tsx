@@ -40,12 +40,12 @@ const Navbar = () => {
 						<i className={isActive("/course") ? "ri-graduation-cap-fill" : "ri-graduation-cap-line"}></i>
 					</Button>
 				</Link>
-				<Link to={"/profile"}>
+				<Link to={"/settings"}>
 					<Button
 						variant={null}
 						size={"icon-lg"}
-						className={`text-[32px] ${isActive("/profile") ? "text-[#FFFFFF]" : "text-[#FFFFFF]/70"} cursor-pointer`}>
-						<i className={isActive("/profile") ? "ri-user-fill" : "ri-user-line"}></i>
+						className={`text-[32px] ${isActive("/settings") ? "text-[#FFFFFF]" : "text-[#FFFFFF]/70"} cursor-pointer`}>
+						<i className={isActive("/settings") ? "ri-user-fill" : "ri-user-line"}></i>
 					</Button>
 				</Link>
 				{/* <Link to={"/messages"}>

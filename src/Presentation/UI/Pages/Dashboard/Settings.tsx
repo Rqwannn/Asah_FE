@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import ProfileImg from "@/assets/profile.svg";
+import ProfileTab from "./Settings/ProfileTab";
+import PersonalDataTab from "./Settings/PersonalDataTab";
+import AcademyTab from "./Settings/AcademyTab";
+import AccountTab from "./Settings/AccountTab";
 
 type CourseStatus = "continue" | "done";
 
@@ -41,12 +45,27 @@ const courses: CourseItem[] = [
 const SettingsPage = () => {
 	const user = JSON.parse(localStorage.getItem("user") || "{}");
 	const displayName = user.username || "Jane Doe";
-	const tabs = ["Profil", "Personal Data", "Account", "Academy"];
-	const [activeTab, setActiveTab] = useState<string>("Profil");
+	const tabs = ["Profile", "Personal Data", "Account", "Academy"];
+	const [activeTab, setActiveTab] = useState<string>("Profile");
+
+	const renderTabContent = () => {
+		switch (activeTab) {
+			case "Profile":
+				return <ProfileTab />;
+			case "Personal Data":
+				return <PersonalDataTab />;
+			case "Academy":
+				return <AcademyTab />;
+			case "Account":
+				return <AccountTab />;
+			default:
+				return null;
+		}
+	};
 
 	return (
 		<div className="h-screen bg-[#F4F2EC] flex items-start justify-between pr-10 pl-[170px] pt-12 overflow-hidden">
-			{/* Heading & tab buttons - ini untuk settings */}
+			
 			<div className="flex-1 flex flex-col items-center gap-5 transform -translate-x-10">
 				<h1 className="text-[26px] font-bold tracking-wide text-[#111827]">SETTINGS</h1>
 				<div className="flex items-center gap-10">
@@ -67,12 +86,7 @@ const SettingsPage = () => {
 						);
 					})}
 				</div>
-				{activeTab === "Profil" && (
-					<div className="relative mt-2">
-						<div className="w-[720px] h-[640px] bg-white border border-[#E7E6E0] rounded-[16px] shadow-[0_10px_24px_rgba(0,0,0,0.08)] overflow-y-auto">
-						</div>
-					</div>
-				)}
+				{renderTabContent()}
 			</div>
 
 			<div className="w-[340px] bg-white rounded-[24px] shadow-[0_12px_32px_rgba(0,0,0,0.12)] border border-gray-100">
