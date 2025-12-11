@@ -141,7 +141,7 @@ const SignInPage = () => {
 								/>
 							</FieldGroup>
 
-							<div className="py-3 sm:py-4 lg:py-5 text-right font-medium text-sm sm:text-base lg:text-[18px]">
+							<div className="py-3 sm:py-4 lg:py-5 text-right font-medium  sm:text-base lg:text-[16px] text-[14px]">
 								<Link to="/forgot-password">
 									<span>Forgot Password?</span>
 								</Link>
