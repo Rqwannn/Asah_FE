@@ -57,7 +57,6 @@ const SignInPage = () => {
 			className="min-h-screen bg-[#285F3E] w-full flex flex-col items-center justify-center bg-no-repeat bg-cover bg-center relative"
 			style={{ backgroundImage: `url(${bgAuth})` }}>
 			<div className="absolute right-4 sm:right-8 lg:right-[100px] top-4 sm:top-8 lg:top-[50px] flex gap-2 items-center">
-			<div className="absolute right-4 sm:right-8 lg:right-[100px] top-4 sm:top-8 lg:top-[50px] flex gap-2 items-center">
 				<p className="text-[16px] text-white font-regular">No Account yet? </p>
 				<Link to="/signup">
 					<Button className="rounded-none bg-[#C34F21] hover:bg-[#C34F21]/90 cursor-pointer">
