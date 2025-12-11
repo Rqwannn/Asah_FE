@@ -15,3 +15,9 @@ export interface JourneyCompletionResponse {
 	status: string;
 	data: JourneyCompletionDTO[];
 }
+
+export interface PostJourneyCompletionResponse {
+	status: string;
+	message: string;
+	data: JourneyCompletionDTO;
+}
