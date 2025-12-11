@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useJourneysFactory } from "@/App/Factories/useJourneyFactory";
 import { useEnrolledJourneys } from "@/App/Factories/useEnrolledJourneys";
 import { useDailyCheckinFactory } from "@/App/Factories/useDailyCheckinFactory";
+import { useUserCompletionsFactory } from "@/App/Factories/useJourneyCompletionFactory";
 import JourneyImage from "./JourneyImage";
 
 const ProfileSidebar = () => {
@@ -12,11 +13,13 @@ const ProfileSidebar = () => {
   const { data: journeys } = useJourneysFactory();
   const enrolledJourneys = useEnrolledJourneys(journeys);
   const { checkins } = useDailyCheckinFactory();
+  const { data: userCompletions } = useUserCompletionsFactory();
   const learningAnalysisLabel = localStorage
     .getItem("learning_analysis_label")
     ?.toUpperCase();
 
   const displayedJourneys = enrolledJourneys.slice(0, 3);
+  const completedCount = userCompletions?.length || 0;
 
   const hasCheckedInToday = React.useMemo(() => {
     if (!checkins) return false;
@@ -59,7 +62,7 @@ const ProfileSidebar = () => {
         <div className="flex w-full gap-4">
           <div className="flex w-full flex-col items-center justify-center gap-1 rounded-lg bg-[#F4F2EC] p-3">
             <span className="text-[24px] leading-none font-bold text-[#285F3E]">
-              11
+              {completedCount}
             </span>
             <span className="text-center text-[10px] leading-tight font-medium text-gray-600">
               Courses Completed
