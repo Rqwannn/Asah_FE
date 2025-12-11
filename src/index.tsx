@@ -21,56 +21,56 @@ import SignUpPage from "./Presentation/UI/Pages/auth/SignUpPage";
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
-	{
-		element: <ProtectedRoute />,
-		children: [
-			{
-				element: <DashboardLayout />,
-				children: [
-					{
-						path: "/",
-						element: <DashboardPage />,
-					},
-					{
-						path: "/course",
-						element: <CoursePage />,
-					},
-					{
-						path: "/course/:id",
-						element: <JourneyDetailPage />,
-					},
-					{
-						path: "/course/learning/:id",
-						element: <CourseTutorialPage />,
-					},
-					{
-						path: "/daily-checkin",
-						element: <DailyCheckinPage />,
-					},
-					{
-						path: "/settings",
-						element: <SettingsPage />,
-					},
-				],
-			},
-		],
-	},
-	{
-		path: "/signin",
-		element: <SignInPage />,
-	},
-	{
-		path: "/signup",
-		element: <SignUpPage />,
-	},
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        element: <DashboardLayout />,
+        children: [
+          {
+            path: "/",
+            element: <DashboardPage />,
+          },
+          {
+            path: "/course",
+            element: <CoursePage />,
+          },
+          {
+            path: "/course/:id",
+            element: <JourneyDetailPage />,
+          },
+          {
+            path: "/course/learning/:id",
+            element: <CourseTutorialPage />,
+          },
+          {
+            path: "/daily-checkin",
+            element: <DailyCheckinPage />,
+          },
+          {
+            path: "/profile",
+            element: <SettingsPage />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: "/signin",
+    element: <SignInPage />,
+  },
+  {
+    path: "/signup",
+    element: <SignUpPage />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-	<React.StrictMode>
-		<QueryClientProvider client={queryClient}>
-			<ToastProvider>
-				<RouterProvider router={router} />
-			</ToastProvider>
-		</QueryClientProvider>
-	</React.StrictMode>
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <ToastProvider>
+        <RouterProvider router={router} />
+      </ToastProvider>
+    </QueryClientProvider>
+  </React.StrictMode>,
 );
