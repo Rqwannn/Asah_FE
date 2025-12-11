@@ -28,4 +28,29 @@ export class JourneyCompletionRepositoryImpl
 			dto.updatedAt
 		);
 	}
+
+	async postCompletion(
+		journeyId: number,
+		rating: number,
+		duration: number
+	): Promise<JourneyCompletionModel> {
+		const response = await this.dataSource.postCompletion(
+			journeyId,
+			rating,
+			duration
+		);
+		const data = response.data;
+		return {
+			id: data.id,
+			user_id: data.user_id,
+			journey_id: data.journey_id,
+			avg_submission_rating: data.avg_submission_rating,
+			study_duration: data.study_duration,
+			enrolling_times: data.enrolling_times,
+			createdAt: data.createdAt,
+			updatedAt: data.updatedAt,
+			enrollments_at: data.enrollments_at || [],
+			last_enrolled_at: data.last_enrolled_at,
+		};
+	}
 }
