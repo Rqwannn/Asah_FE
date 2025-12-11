@@ -380,7 +380,7 @@ const CourseTutorialPage = () => {
 
         {/* Optional: Sidebar Footer */}
         <div className="border-t border-gray-100 bg-gray-50 p-4 text-center">
-          <p className="text-xs text-gray-400">© 2025 Asah Platform</p>
+          <p className="text-xs text-gray-400">© 2025 LearnalyTica Platform</p>
         </div>
       </aside>
     </div>
