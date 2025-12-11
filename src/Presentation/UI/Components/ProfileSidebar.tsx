@@ -2,107 +2,161 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import ProfileImg from "@/assets/profile.svg";
 import { Link } from "react-router-dom";
+import { useJourneysFactory } from "@/App/Factories/useJourneyFactory";
+import { useEnrolledJourneys } from "@/App/Factories/useEnrolledJourneys";
+import { useDailyCheckinFactory } from "@/App/Factories/useDailyCheckinFactory";
+import JourneyImage from "./JourneyImage";
 
 const ProfileSidebar = () => {
-	const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const { data: journeys } = useJourneysFactory();
+  const enrolledJourneys = useEnrolledJourneys(journeys);
+  const { checkins } = useDailyCheckinFactory();
+  const learningAnalysisLabel = localStorage
+    .getItem("learning_analysis_label")
+    ?.toUpperCase();
 
-	return (
-		<div className="bg-[#FFFFFF] h-full w-full md:w-[280px] lg:w-[310px] fixed right-0 top-0 px-4 py-6 md:px-5 lg:px-6 md:py-6 lg:py-8 border-l border-gray-100 hidden lg:flex flex-col gap-4 md:gap-5 lg:gap-6 overflow-y-auto scrollbar-hide z-50">
-			<div className="flex flex-col items-center gap-4">
-				<div>
-					<img
-						src={ProfileImg}
-						alt="Profile"
-						className="rounded-full size-[72px] shrink-0 object-cover border-4 border-white shadow-sm"
-					/>
-				</div>
+  const displayedJourneys = enrolledJourneys.slice(0, 3);
 
-				<div className="flex flex-col gap-1 items-center w-full">
-					<h1 className="text-[16px] font-bold leading-8 text-gray-900">
-						{user.username || "Guest User"}
-					</h1>
+  const hasCheckedInToday = React.useMemo(() => {
+    if (!checkins) return false;
+    const today = new Date();
+    return checkins.some((c) => {
+      const d = new Date(c.date);
+      return (
+        d.getDate() === today.getDate() &&
+        d.getMonth() === today.getMonth() &&
+        d.getFullYear() === today.getFullYear()
+      );
+    });
+  }, [checkins]);
 
-					<div className="w-full bg-[#F4F2EC] rounded-lg overflow-hidden py-1">
-						<span className="text-[12px] whitespace-nowrap inline-block w-full animate-marquee font-medium text-[#000000] text-center">
-							SI CEPAT PAHAM
-						</span>
-					</div>
-				</div>
+  return (
+    <div className="scrollbar-hide fixed top-0 right-0 z-50 hidden h-full w-full flex-col gap-4 overflow-y-auto border-l border-gray-100 bg-[#FFFFFF] px-4 py-6 md:w-[280px] md:gap-5 md:px-5 md:py-6 lg:flex lg:w-[310px] lg:gap-6 lg:px-6 lg:py-8">
+      <div className="flex flex-col items-center gap-4">
+        <div>
+          <img
+            src={ProfileImg}
+            alt="Profile"
+            className="size-[72px] shrink-0 rounded-full border-4 border-white object-cover shadow-sm"
+          />
+        </div>
 
-				<div className="flex w-full gap-4">
-					<div className="bg-[#F4F2EC] rounded-lg w-full flex flex-col items-center justify-center gap-1 p-3">
-						<span className="text-[24px] text-[#285F3E] font-bold leading-none">
-							11
-						</span>
-						<span className="text-[10px] text-gray-600 font-medium text-center leading-tight">
-							Courses Completed
-						</span>
-					</div>
-					<div className="bg-[#F4F2EC] rounded-lg w-full flex flex-col items-center justify-center gap-1 p-3">
-						<span className="text-[24px] text-[#C34F21] font-bold leading-none">
-							4
-						</span>
-						<span className="text-[10px] text-gray-600 font-medium text-center leading-tight">
-							Certificates Earned
-						</span>
-					</div>
-				</div>
+        <div className="flex w-full flex-col items-center gap-1">
+          <h1 className="text-[16px] leading-8 font-bold text-gray-900">
+            {user.username || "Guest User"}
+          </h1>
 
-				<Link to="/daily-checkin" className="w-full">
-					<Button
-						variant={null}
-						className="w-full flex items-center justify-center gap-2 cursor-pointer mt-2 bg-white border border-gray-100 hover:bg-gray-50 py-6 rounded-xl shadow-sm transition-all">
-						<div className="relative">
-							<i className="ri-notification-3-fill text-[24px] text-[#285F3E]"></i>
-							<span className="size-2.5 rounded-full animate-ping bg-[#F45B5B] absolute right-0 top-0"></span>
-							<span className="absolute inline-flex size-2.5 rounded-full bg-[#F45B5B] top-0 right-0 border-2 border-white"></span>
-						</div>
-						<span className="text-[14px] font-semibold text-gray-700">
-							Daily Check-in
-						</span>
-					</Button>
-				</Link>
+          {learningAnalysisLabel && (
+            <div className="w-full overflow-hidden rounded-lg bg-[#F4F2EC] py-1">
+              <span className="animate-marquee inline-block w-full text-center text-[12px] font-medium whitespace-nowrap text-[#000000]">
+                {learningAnalysisLabel}
+              </span>
+            </div>
+          )}
+        </div>
 
-				<div className="w-full flex flex-col gap-4 mt-2">
-					<div className="flex items-center justify-between">
-						<span className="font-bold text-[14px] text-gray-900">
-							Your Courses
-						</span>
-						<span className="text-[12px] text-[#285F3E] font-medium cursor-pointer hover:underline">
-							See all
-						</span>
-					</div>
+        <div className="flex w-full gap-4">
+          <div className="flex w-full flex-col items-center justify-center gap-1 rounded-lg bg-[#F4F2EC] p-3">
+            <span className="text-[24px] leading-none font-bold text-[#285F3E]">
+              11
+            </span>
+            <span className="text-center text-[10px] leading-tight font-medium text-gray-600">
+              Courses Completed
+            </span>
+          </div>
+          {/* <div className="flex w-full flex-col items-center justify-center gap-1 rounded-lg bg-[#F4F2EC] p-3">
+            <span className="text-[24px] leading-none font-bold text-[#C34F21]">
+              4
+            </span>
+            <span className="text-center text-[10px] leading-tight font-medium text-gray-600">
+              Certificates Earned
+            </span>
+          </div> */}
+        </div>
 
-					{/* Course List */}
-					<div className="flex flex-col gap-4">
-						{Array.from({ length: 3 }).map((_, i) => (
-							<div key={i} className="flex flex-col gap-3">
-								<div className="flex items-center w-full gap-3">
-									<div className="size-10 rounded-lg flex items-center justify-center bg-[#F4F2EC] text-[#285F3E] shrink-0">
-										<i className="ri-figma-fill text-xl"></i>
-									</div>
-									<div className="flex flex-col flex-1 min-w-0">
-										<span className="text-[12px] font-bold text-gray-900 truncate">
-											Advanced Figma
-										</span>
-										<span className="text-[10px] text-gray-500 truncate">
-											by Prashant Kumar
-										</span>
-									</div>
-									<Button
-										variant={null}
-										className="bg-[#285F3E] hover:bg-[#1e462e] rounded-full text-white px-4 py-1 h-7 shrink-0 transition-colors">
-										<span className="text-[10px] font-medium">Continue</span>
-									</Button>
-								</div>
-								{i < 2 && <div className="w-full h-px bg-gray-100"></div>}
-							</div>
-						))}
-					</div>
-				</div>
-			</div>
-		</div>
-	);
+        <Link to="/daily-checkin" className="w-full">
+          <Button
+            variant={null}
+            className="mt-2 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-gray-100 bg-white py-6 shadow-sm transition-all hover:bg-gray-50"
+          >
+            <div className="relative">
+              <i className="ri-notification-3-fill text-[24px] text-[#285F3E]"></i>
+              {!hasCheckedInToday && (
+                <>
+                  <span className="absolute top-0 right-0 size-2.5 animate-ping rounded-full bg-[#F45B5B]"></span>
+                  <span className="absolute top-0 right-0 inline-flex size-2.5 rounded-full border-2 border-white bg-[#F45B5B]"></span>
+                </>
+              )}
+            </div>
+            <span className="text-[14px] font-semibold text-gray-700">
+              Daily Check-in
+            </span>
+          </Button>
+        </Link>
+
+        <div className="mt-2 flex w-full flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <span className="text-[14px] font-bold text-gray-900">
+              Your Courses
+            </span>
+            <Link
+              to="/course"
+              className="cursor-pointer text-[12px] font-medium text-[#285F3E] hover:underline"
+            >
+              See all
+            </Link>
+          </div>
+
+          {/* Course List */}
+          <div className="flex flex-col gap-4">
+            {displayedJourneys.length === 0 ? (
+              <div className="py-4 text-center text-xs text-gray-500">
+                No courses enrolled yet.
+              </div>
+            ) : (
+              displayedJourneys.map((journey, i) => (
+                <div key={journey.id} className="flex flex-col gap-3">
+                  <div className="flex w-full items-center gap-3">
+                    <div className="size-10 shrink-0 overflow-hidden rounded-lg bg-[#F4F2EC]">
+                      {journey.image_path ? (
+                        <JourneyImage
+                          src={journey.image_path}
+                          alt={journey.name}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-[#285F3E]">
+                          <i className="ri-book-open-line text-xl"></i>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex min-w-0 flex-1 flex-col">
+                      <span className="truncate text-[12px] font-bold text-gray-900">
+                        {journey.name}
+                      </span>
+                      <span className="truncate text-[10px] text-gray-500">
+                        Start learning
+                      </span>
+                    </div>
+                    <Link
+                      to={`/course/${journey.id}`}
+                      className="flex h-7 shrink-0 items-center justify-center rounded-full bg-[#285F3E] px-4 py-1 text-white transition-colors hover:bg-[#1e462e]"
+                    >
+                      <span className="text-[10px] font-medium">Continue</span>
+                    </Link>
+                  </div>
+                  {i < displayedJourneys.length - 1 && (
+                    <div className="h-px w-full bg-gray-100"></div>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default ProfileSidebar;
