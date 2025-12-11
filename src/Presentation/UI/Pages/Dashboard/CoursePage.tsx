@@ -12,8 +12,11 @@ import {
 } from "@/components/ui/carousel";
 import ProfileSidebar from "../../Components/ProfileSidebar";
 
+import {
+	useJourneyCompletionFactory,
+	usePostJourneyCompletionFactory,
+} from "@/App/Factories/useJourneyCompletionFactory";
 import { useJourneysFactory } from "@/App/Factories/useJourneyFactory";
-import { useJourneyCompletionFactory } from "@/App/Factories/useJourneyCompletionFactory";
 import { useState } from "react";
 import JourneyImage from "../../Components/JourneyImage";
 import { JourneyDTO as Journey } from "@/Data/DTOs/JourneyDTO";
@@ -22,6 +25,28 @@ const JourneyCard = ({ journey }: { journey: Journey }) => {
 	const { data: completion, isLoading } = useJourneyCompletionFactory(
 		journey.id.toString()
 	);
+	const { mutate: enroll, isPending: isEnrolling } =
+		usePostJourneyCompletionFactory();
+
+	const handleAction = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		if (completion) {
+			window.location.href = `/course/learning/${journey.id}`;
+		} else {
+			enroll(
+				{
+					journeyId: Number(journey.id),
+					rating: 0,
+					duration: 0,
+				},
+				{
+					onSuccess: () => {
+						window.location.href = `/course/learning/${journey.id}`;
+					},
+				}
+			);
+		}
+	};
 
 	return (
 		<div
@@ -65,12 +90,13 @@ const JourneyCard = ({ journey }: { journey: Journey }) => {
 					<Button
 						size="sm"
 						variant="ghost"
+						onClick={handleAction}
 						className={`h-8 rounded-full px-3 text-xs font-bold ${
-							completion
+							completion || isEnrolling
 								? "text-orange-600 hover:text-orange-700 hover:bg-orange-50"
 								: "text-[#285F3E] hover:text-[#285F3E] hover:bg-[#285F3E]/10"
 						}`}>
-						{isLoading
+						{isLoading || isEnrolling
 							? "Loading..."
 							: completion
 							? "Continue Learning"
@@ -83,14 +109,78 @@ const JourneyCard = ({ journey }: { journey: Journey }) => {
 	);
 };
 
+// Custom hook import
+import { useEnrolledJourneys } from "@/App/Factories/useEnrolledJourneys";
+import {
+	useJourneyDetailFactory,
+	useJourneyTrackingsFactory,
+} from "@/App/Factories/useJourneyFactory";
+
+const EnrolledJourneyCard = ({ journey }: { journey: Journey }) => {
+	// Fetch detail to get tutorials for total count
+	const { data: detail, isLoading } = useJourneyDetailFactory(
+		journey.id.toString()
+	);
+	const { data: trackings, isLoading: isTrackingsLoading } =
+		useJourneyTrackingsFactory(journey.id.toString());
+
+	const totalTutorials =
+		detail?.tutorials?.length || detail?.teaching_methods?.length || 0;
+	const completedCount = trackings?.length || 0;
+	const rawPercentage =
+		totalTutorials > 0 ? (completedCount / totalTutorials) * 100 : 0;
+	const percentage = Math.round(Math.min(rawPercentage, 100));
+
+	return (
+		<div
+			className="group bg-white rounded-2xl border border-gray-100 p-3 shadow-sm hover:shadow-md transition-all cursor-pointer h-full flex flex-col gap-3"
+			onClick={() => (window.location.href = `/course/${journey.id}`)}>
+			<div className="w-full h-32 rounded-xl bg-gray-100 relative overflow-hidden">
+				{journey.image_path ? (
+					<JourneyImage
+						src={journey.image_path}
+						alt={journey.name}
+						className="w-full h-full object-cover"
+					/>
+				) : (
+					<div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-gray-100 to-gray-200 text-gray-400">
+						<i className="ri-book-open-line text-4xl opacity-50"></i>
+					</div>
+				)}
+				<div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-[10px] font-bold text-[#285F3E] shadow-sm">
+					{journey.difficulty}
+				</div>
+			</div>
+			<div className="flex flex-col gap-1 px-1">
+				<h3 className="font-bold text-[#202020] line-clamp-1 group-hover:text-[#285F3E] transition-colors">
+					{journey.name}
+				</h3>
+				<p className="text-xs text-gray-500">
+					{journey.summary || "Continue your progress"}
+				</p>
+			</div>
+			<div className="mt-auto px-1 flex flex-col gap-1.5">
+				<div className="flex justify-between text-[10px] font-medium text-gray-500">
+					<span>Progress</span>
+					<span>{isLoading || isTrackingsLoading ? "..." : percentage}%</span>
+				</div>
+				<Progress
+					value={percentage}
+					className="h-1.5 bg-gray-100"
+					indicatorClassName="bg-[#285F3E]"
+				/>
+			</div>
+		</div>
+	);
+};
+
 const CoursePage = () => {
 	const { data: journeys, isLoading } = useJourneysFactory();
+	const enrolledJourneys = useEnrolledJourneys(journeys);
 	const [searchQuery, setSearchQuery] = useState("");
 
-	const continueLearningJourneys =
-		journeys?.filter(
-			(journey) => journey.progress_info && journey.progress_info.percentage > 0
-		) || [];
+	// Use enrolledJourneys from hook
+	const continueLearningJourneys = enrolledJourneys;
 
 	const filteredJourneys = journeys?.filter((journey) =>
 		journey.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -144,47 +234,7 @@ const CoursePage = () => {
 									<CarouselItem
 										key={journey.id}
 										className="pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
-										<div
-											className="group bg-white rounded-2xl border border-gray-100 p-3 shadow-sm hover:shadow-md transition-all cursor-pointer h-full flex flex-col gap-3"
-											onClick={() =>
-												(window.location.href = `/course/${journey.id}`)
-											}>
-											<div className="w-full h-32 rounded-xl bg-gray-100 relative overflow-hidden">
-												{journey.image_path ? (
-													<JourneyImage
-														src={journey.image_path}
-														alt={journey.name}
-														className="w-full h-full object-cover"
-													/>
-												) : (
-													<div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-gray-100 to-gray-200 text-gray-400">
-														<i className="ri-book-open-line text-4xl opacity-50"></i>
-													</div>
-												)}
-												<div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-[10px] font-bold text-[#285F3E] shadow-sm">
-													{journey.difficulty}
-												</div>
-											</div>
-											<div className="flex flex-col gap-1 px-1">
-												<h3 className="font-bold text-[#202020] line-clamp-1 group-hover:text-[#285F3E] transition-colors">
-													{journey.name}
-												</h3>
-												<p className="text-xs text-gray-500">
-													{journey.summary || "Continue your progress"}
-												</p>
-											</div>
-											<div className="mt-auto px-1 flex flex-col gap-1.5">
-												<div className="flex justify-between text-[10px] font-medium text-gray-500">
-													<span>Progress</span>
-													<span>{journey.progress_info?.percentage || 0}%</span>
-												</div>
-												<Progress
-													value={journey.progress_info?.percentage || 0}
-													className="h-1.5 bg-gray-100"
-													indicatorClassName="bg-[#285F3E]"
-												/>
-											</div>
-										</div>
+										<EnrolledJourneyCard journey={journey} />
 									</CarouselItem>
 								))}
 							</CarouselContent>
