@@ -198,7 +198,7 @@ const SignUpPage = () => {
   };
 
   useEffect(() => {
-    form.setValue("role", "user");
+    form.setValue("role", "student");
   }, []);
   return (
     <main

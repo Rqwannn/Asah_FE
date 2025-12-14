@@ -17,6 +17,8 @@ import ProtectedRoute from "./Presentation/UI/Components/ProtectedRoute";
 import { ToastProvider } from "./components/ui/use-toast";
 import SignInPage from "./Presentation/UI/Pages/auth/SignInPage";
 import SignUpPage from "./Presentation/UI/Pages/auth/SignUpPage";
+import JourneySubmissionsPage from "./Presentation/UI/Pages/Reviewer/JourneySubmissionsPage";
+import AllSubmissionsPage from "./Presentation/UI/Pages/Reviewer/AllSubmissionsPage";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +52,14 @@ const router = createBrowserRouter([
           {
             path: "/profile",
             element: <SettingsPage />,
+          },
+          {
+            path: "/journeys/:id/submissions",
+            element: <JourneySubmissionsPage />,
+          },
+          {
+            path: "/submissions",
+            element: <AllSubmissionsPage />,
           },
         ],
       },

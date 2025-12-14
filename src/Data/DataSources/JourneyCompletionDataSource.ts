@@ -33,4 +33,19 @@ export class JourneyCompletionDataSource {
     );
     return response.data;
   }
+
+  async putCompletion(
+    journeyId: number,
+    payload: {
+      enrollments_at?: string;
+      last_enrolled_at: string;
+      study_duration?: number;
+    },
+  ): Promise<PostJourneyCompletionResponse> {
+    const response = await Http.put<PostJourneyCompletionResponse>(
+      `/journeys/${journeyId}/completions`,
+      payload,
+    );
+    return response.data;
+  }
 }

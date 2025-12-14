@@ -14,12 +14,14 @@ const ProfileSidebar = () => {
   const enrolledJourneys = useEnrolledJourneys(journeys);
   const { checkins } = useDailyCheckinFactory();
   const { data: userCompletions } = useUserCompletionsFactory();
-  const learningAnalysisLabel = localStorage
-    .getItem("learning_analysis_label")
-    ?.toUpperCase();
+  // Read from user object first, then fallback to legacy local storage item
+  const learningAnalysisLabel = (
+    user.predicted_label || localStorage.getItem("learning_analysis_label")
+  )?.toUpperCase();
 
   const displayedJourneys = enrolledJourneys.slice(0, 3);
-  const completedCount = userCompletions?.length || 0;
+  const completedCount =
+    userCompletions?.filter((c) => c.last_enrolled_at).length || 0;
 
   const hasCheckedInToday = React.useMemo(() => {
     if (!checkins) return false;

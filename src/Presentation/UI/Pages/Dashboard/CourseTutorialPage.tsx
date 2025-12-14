@@ -10,7 +10,14 @@ import {
   usePostJourneyTrackingFactory,
 } from "@/App/Factories/useJourneyTrackingFactory";
 import { usePostLearningAnalysisFactory } from "@/App/Factories/useLearningAnalysisFactory";
-import { useJourneyCompletionFactory } from "@/App/Factories/useJourneyCompletionFactory";
+import {
+  useJourneyCompletionFactory,
+  usePutJourneyCompletionFactory,
+} from "@/App/Factories/useJourneyCompletionFactory";
+import {
+  useUpdateUserFactory,
+  useUpdateUserPredictionFactory,
+} from "@/App/Factories/useUpdateUserFactory";
 import {
   CheckCircle2,
   PlayCircle,
@@ -20,6 +27,13 @@ import {
   Clock,
   BarChart,
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import {
+  usePostSubmissionFactory,
+  useGetSubmissionsFactory,
+} from "@/App/Factories/useSubmissionFactory";
 import { useToast } from "@/components/ui/use-toast";
 
 const CourseTutorialPage = () => {
@@ -34,11 +48,31 @@ const CourseTutorialPage = () => {
     usePostJourneyTrackingFactory();
   const { mutate: postLearningAnalysis } = usePostLearningAnalysisFactory();
   const { data: completion } = useJourneyCompletionFactory(id || "");
+  const { mutate: updateCompletion } = usePutJourneyCompletionFactory();
+  const { mutate: updatePrediction } = useUpdateUserPredictionFactory();
+  const { mutate: submitAssignment, isPending: isSubmitting } =
+    usePostSubmissionFactory();
   const { toast } = useToast();
 
   const [selectedTutorialId, setSelectedTutorialId] = React.useState<
     number | null
   >(null);
+
+  const [appLink, setAppLink] = React.useState("");
+  const [appComment, setAppComment] = React.useState("");
+
+  // Fetch submissions for the selected tutorial
+  const { data: submissionsData } = useGetSubmissionsFactory(Number(id), {
+    quiz_id: selectedTutorialId,
+  });
+
+  // Fetch all submissions for the journey to calculate averages
+  const { data: allSubmissionsData } = useGetSubmissionsFactory(Number(id), {
+    limit: 100,
+  });
+
+  // State to hold the latest submission for the current tutorial
+  const [currentSubmission, setCurrentSubmission] = React.useState<any>(null);
 
   const mainContentRef = React.useRef<HTMLDivElement>(null);
 
@@ -48,15 +82,37 @@ const CourseTutorialPage = () => {
     }
   }, [tutorials, selectedTutorialId]);
 
+  // Populate inputs with latest submission data
   React.useEffect(() => {
-    if (mainContentRef.current) {
-      mainContentRef.current.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  }, [selectedTutorialId]);
+    if (
+      submissionsData &&
+      submissionsData.data &&
+      submissionsData.data.data.length > 0
+    ) {
+      // Assuming the API returns submissions, we take the latest one (highest version_id or created_at)
+      // The backend filters by quiz_id, so these correspond to the current tutorial.
+      const latestSubmission = submissionsData.data.data.reduce(
+        (prev, current) => {
+          return prev.version_id > current.version_id ? prev : current;
+        },
+      );
 
-  const selectedTutorial = tutorials?.find((t) => t.id === selectedTutorialId);
-  const selectedIndex =
-    tutorials?.findIndex((t) => t.id === selectedTutorialId) ?? 0;
+      setCurrentSubmission(latestSubmission);
+
+      if (latestSubmission) {
+        setAppLink(latestSubmission.app_link || "");
+        setAppComment(latestSubmission.app_comment || "");
+      }
+    } else {
+      // Reset if no submission found (e.g. switching to a tutorial with no submission)
+      // But wait, if we switch tutorial, selectedTutorialId changes, then submissionsData changes.
+      // We should handle the "loading" or "undefined" state to avoid clearing while fetching?
+      // Actually, resetting is correct because if there's no submission for THIS tutorial, inputs should be empty.
+      setCurrentSubmission(null);
+      setAppLink("");
+      setAppComment("");
+    }
+  }, [submissionsData, selectedTutorialId]);
 
   // Calculate Progress
   const completedTutorialIds = React.useMemo(() => {
@@ -70,10 +126,159 @@ const CourseTutorialPage = () => {
     );
   }, [trackings]);
 
+  React.useEffect(() => {
+    if (mainContentRef.current) {
+      mainContentRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [selectedTutorialId]);
+
+  const selectedTutorial = tutorials?.find((t) => t.id === selectedTutorialId);
+  const selectedIndex =
+    tutorials?.findIndex((t) => t.id === selectedTutorialId) ?? 0;
+
   const progressPercentage = React.useMemo(() => {
     if (!tutorials || tutorials.length === 0) return 0;
     return Math.round((completedTutorialIds.size / tutorials.length) * 100);
   }, [tutorials, completedTutorialIds]);
+
+  const handleCourseCompletion = () => {
+    if (!journey) return;
+
+    const now = new Date();
+    // ... (rest of logic)
+
+    const formatDate = (date: Date) => {
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const dd = String(date.getDate()).padStart(2, "0");
+      const yyyy = date.getFullYear();
+      const HH = String(date.getHours()).padStart(2, "0");
+      const MM = String(date.getMinutes()).padStart(2, "0");
+      const SS = String(date.getSeconds()).padStart(2, "0");
+      return `${mm}/${dd}/${yyyy} ${HH}:${MM}:${SS}`;
+    };
+
+    const enrollmentTime = completion?.createdAt
+      ? new Date(completion.createdAt)
+      : now;
+
+    // Calculate study duration in minutes
+    const studyDuration = Math.round(
+      Math.max(0, (now.getTime() - enrollmentTime.getTime()) / 60000),
+    );
+
+    // Update completion with last_enrolled_at and study_duration
+    updateCompletion({
+      journeyId: Number(journey.id),
+      payload: {
+        last_enrolled_at: now.toISOString(),
+        study_duration: studyDuration,
+      },
+    });
+
+    // Calculate Submission Metrics
+    const submissions = allSubmissionsData?.data?.data || [];
+
+    // 1. Avg Submission Rating
+    const ratedSubmissions = submissions.filter(
+      (s) => s.rating !== null && s.rating !== undefined,
+    );
+    const totalRating = ratedSubmissions.reduce(
+      (acc, curr) => acc + (curr.rating || 0),
+      0,
+    );
+    const avgRating =
+      ratedSubmissions.length > 0 ? totalRating / ratedSubmissions.length : 0;
+
+    const submissionRating = avgRating;
+
+    // 3. Submission Duration
+    const totalSubmissionDuration = submissions.reduce(
+      (acc, curr) => acc + (curr.submission_duration || 0),
+      0,
+    );
+
+    const lastSub =
+      submissions.length > 0 ? submissions[submissions.length - 1] : null;
+
+    // Only trigger analysis and user update if it's the last tutorial
+    postLearningAnalysis(
+      {
+        tracking_status: 1,
+        tracking_first_opened_at: formatDate(enrollmentTime),
+        tracking_completed_at: formatDate(now),
+        completion_created_at: formatDate(enrollmentTime),
+        completion_enrolling_times: 1.0,
+        completion_study_duration: studyDuration,
+        completion_avg_submission_rating: avgRating,
+        submission_status: 1.0,
+        submission_created_at: lastSub
+          ? formatDate(new Date(lastSub.created_at))
+          : formatDate(now),
+        submission_duration:
+          totalSubmissionDuration > 0 ? totalSubmissionDuration : studyDuration,
+        submission_ended_review_at:
+          lastSub && lastSub.ended_review_at
+            ? formatDate(new Date(lastSub.ended_review_at))
+            : formatDate(now),
+        submission_rating: submissionRating,
+      },
+      {
+        onSuccess: (analysisData: any) => {
+          console.log("DEBUG: postLearningAnalysis success", analysisData);
+          if (analysisData) {
+            console.log("DEBUG: calling updatePrediction");
+            updatePrediction({
+              predicted_label: analysisData.predicted_label,
+              lime_visualization: analysisData.lime_visualization,
+              confidence_visualization: analysisData.confidence_visualization,
+            });
+          } else {
+            console.error("DEBUG: analysisData is null/undefined");
+          }
+        },
+        onError: (err) => {
+          console.error("DEBUG: postLearningAnalysis failed", err);
+        },
+      },
+    );
+  };
+
+  // Auto-mark complete if submission is passed
+  React.useEffect(() => {
+    if (
+      selectedTutorialId &&
+      currentSubmission &&
+      currentSubmission.status === "passed"
+    ) {
+      const isCompleted = completedTutorialIds.has(selectedTutorialId);
+      if (!isCompleted && journey) {
+        markComplete(
+          {
+            journeyId: Number(journey.id),
+            tutorialId: selectedTutorialId,
+            status: 1,
+          },
+          {
+            onSuccess: () => {
+              if (
+                tutorials &&
+                selectedTutorialId &&
+                tutorials[tutorials.length - 1].id === selectedTutorialId
+              ) {
+                handleCourseCompletion();
+              }
+            },
+          },
+        );
+      }
+    }
+  }, [
+    currentSubmission,
+    selectedTutorialId,
+    journey,
+    completedTutorialIds,
+    tutorials,
+  ]);
 
   const handleNext = () => {
     if (selectedTutorial) {
@@ -81,19 +286,19 @@ const CourseTutorialPage = () => {
       const isLastTutorial =
         tutorials && selectedIndex === tutorials.length - 1;
 
-      if (isCompleted) {
-        // If already completed, just check if we need to trigger AI analysis (if last tutorial and maybe not triggered before?
-        // For now user just said "don't fetch api" for tracking.
-        // But if it's the last tutorial, we might want to ensure completion logic runs if it hasn't?
-        // User said "if tracked done, but wants to learn again & next lesson, don't fetch api".
-        // This implies just navigation.
+      // Rule: Cannot proceed if submission is required but not done/passed
+      if (selectedTutorial.type === "submission" && !isCompleted) {
+        toast(
+          "Please wait for your assignment to be graded and passed to proceed.",
+          "error",
+        );
+        return;
+      }
 
-        // However, we should probably still check if it's the last tutorial to allow "Complete Course" behavior if needed,
-        // effectively just navigating or showing completion state.
-        // But strictly following "don't fetch api":
+      if (isCompleted) {
         proceedToNext();
       } else {
-        // Not completed, mark as complete
+        // Not completed, mark as complete (for non-submission types)
         if (journey) {
           markComplete(
             {
@@ -103,43 +308,8 @@ const CourseTutorialPage = () => {
             },
             {
               onSuccess: () => {
-                toast("Progress saved!", "success");
-
                 if (isLastTutorial) {
-                  const now = new Date();
-                  const formatDate = (date: Date) => {
-                    const mm = String(date.getMonth() + 1).padStart(2, "0");
-                    const dd = String(date.getDate()).padStart(2, "0");
-                    const yyyy = date.getFullYear();
-                    const HH = String(date.getHours()).padStart(2, "0");
-                    const MM = String(date.getMinutes()).padStart(2, "0");
-                    const SS = String(date.getSeconds()).padStart(2, "0");
-                    return `${mm}/${dd}/${yyyy} ${HH}:${MM}:${SS}`;
-                  };
-
-                  const enrollmentTime = completion?.createdAt
-                    ? new Date(completion.createdAt)
-                    : now;
-
-                  const studyDuration = Math.max(
-                    0,
-                    (now.getTime() - enrollmentTime.getTime()) / 1000 / 60,
-                  );
-
-                  postLearningAnalysis({
-                    tracking_status: 1,
-                    tracking_first_opened_at: formatDate(enrollmentTime),
-                    tracking_completed_at: formatDate(now),
-                    completion_created_at: formatDate(enrollmentTime),
-                    completion_enrolling_times: 1.0,
-                    completion_study_duration: studyDuration,
-                    completion_avg_submission_rating: 5.0,
-                    submission_status: 1.0,
-                    submission_created_at: formatDate(now),
-                    submission_duration: 300.0,
-                    submission_ended_review_at: formatDate(now),
-                    submission_rating: 5.0,
-                  });
+                  handleCourseCompletion();
                 }
 
                 proceedToNext();
@@ -168,6 +338,82 @@ const CourseTutorialPage = () => {
       setSelectedTutorialId(tutorials[selectedIndex - 1].id);
     }
   };
+
+  // Track start time for submission duration
+  const submissionStartTimeRef = React.useRef<Date>(new Date());
+
+  React.useEffect(() => {
+    submissionStartTimeRef.current = new Date();
+  }, [selectedTutorialId]);
+
+  const handleSubmission = () => {
+    if (!journey || !selectedTutorial) return;
+
+    if (!appLink.trim()) {
+      toast("Please provide a link to your application.", "error");
+      return;
+    }
+
+    const durationMinutes = Math.round(
+      (new Date().getTime() - submissionStartTimeRef.current.getTime()) / 60000,
+    );
+
+    submitAssignment(
+      {
+        journeyId: Number(journey.id),
+        payload: {
+          quiz_id: selectedTutorial.id,
+          app_link: appLink,
+          app_comment: appComment,
+          submission_duration: durationMinutes,
+        },
+      },
+      {
+        onSuccess: () => {
+          toast(
+            "Submission sent successfully. Please wait for review.",
+            "success",
+          );
+          // NOTE: We do NOT mark complete here anymore.
+          // Completion happens when status becomes 'passed'.
+        },
+        onError: () => {
+          toast("Failed to submit assignment.", "error");
+        },
+      },
+    );
+  };
+
+  // STATUS BADGE HELPER
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "submitted":
+        return (
+          <span className="me-2 rounded bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">
+            Under Review
+          </span>
+        );
+      case "passed":
+        return (
+          <span className="me-2 rounded bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+            Passed
+          </span>
+        );
+      case "failed":
+        return (
+          <span className="me-2 rounded bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">
+            Failed (Please Resubmit)
+          </span>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const isReadOnly =
+    currentSubmission &&
+    (currentSubmission.status === "submitted" ||
+      currentSubmission.status === "passed");
 
   if (isJourneyLoading || isTutorialsLoading) {
     return (
@@ -254,6 +500,77 @@ const CourseTutorialPage = () => {
                       __html: selectedTutorial.content,
                     }}
                   />
+
+                  {selectedTutorial.type === "submission" && (
+                    <div className="mt-10 rounded-xl border border-gray-200 bg-gray-50 p-6">
+                      <div className="mb-4 flex items-center justify-between">
+                        <h3 className="text-lg font-bold text-gray-900">
+                          Submit Your Assignment
+                        </h3>
+                        {currentSubmission &&
+                          getStatusBadge(currentSubmission.status)}
+                      </div>
+
+                      {currentSubmission && (
+                        <div className="mb-4 rounded border border-gray-100 bg-white p-4">
+                          <div className="text-sm text-gray-600">
+                            <strong>Status:</strong> {currentSubmission.status}
+                          </div>
+                          {currentSubmission.rating !== null && (
+                            <div className="mt-1 text-sm text-gray-600">
+                              <strong>Grade:</strong> {currentSubmission.rating}
+                              /5
+                            </div>
+                          )}
+                          {currentSubmission.reviewer_note && (
+                            <div className="mt-1 text-sm text-gray-600">
+                              <strong>Feedback:</strong>{" "}
+                              {currentSubmission.reviewer_note}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="appLink">
+                            Application Link / Repository
+                          </Label>
+                          <Input
+                            id="appLink"
+                            placeholder="https://github.com/username/project"
+                            value={appLink}
+                            onChange={(e) => setAppLink(e.target.value)}
+                            disabled={isReadOnly}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="appComment">Notes (Optional)</Label>
+                          <Textarea
+                            id="appComment"
+                            placeholder="Add any comments for the reviewer..."
+                            value={appComment}
+                            onChange={(e) => setAppComment(e.target.value)}
+                            rows={4}
+                            disabled={isReadOnly}
+                          />
+                        </div>
+                        {!isReadOnly && (
+                          <Button
+                            onClick={handleSubmission}
+                            disabled={isSubmitting}
+                            className="bg-[#285F3E] text-white hover:bg-[#1e462e]"
+                          >
+                            {isSubmitting
+                              ? "Submitting..."
+                              : currentSubmission?.status === "failed"
+                                ? "Resubmit Assignment"
+                                : "Submit Assignment"}
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="p-20 text-center">
@@ -288,11 +605,20 @@ const CourseTutorialPage = () => {
               onClick={handleNext}
               disabled={
                 !tutorials ||
+                // Disable if last tutorial and already completed/marked
                 (selectedIndex === tutorials.length - 1 &&
                   completedTutorialIds.has(selectedTutorial?.id || 0)) ||
+                // Also disable if it's a submission type and NOT completed (force use of submit button, or use Next to trigger the toast check)
+                // Actually, the user requirement is "gaboleh lanjut", so disable is good, but toast is better feedback.
+                // Let's keep it enabled so they click and get the toast explaining WHY.
                 isMarkingComplete
               }
-              className="h-12 bg-[#285F3E] px-6 text-base font-medium text-white shadow-md transition-all hover:bg-[#1e462e] hover:shadow-lg disabled:opacity-50 disabled:shadow-none"
+              className={`h-12 border border-transparent px-6 text-base font-medium text-white shadow-md transition-all hover:shadow-lg disabled:opacity-50 disabled:shadow-none ${
+                selectedTutorial?.type === "submission" &&
+                !completedTutorialIds.has(selectedTutorial.id || 0)
+                  ? "bg-[#285F3E] opacity-90" // Keep clickable for toast
+                  : "bg-[#285F3E] hover:bg-[#1e462e]"
+              }`}
             >
               {isMarkingComplete ? (
                 "Saving..."
@@ -334,15 +660,36 @@ const CourseTutorialPage = () => {
               const isActive = tutorial.id === selectedTutorialId;
               const isCompleted = completedTutorialIds.has(tutorial.id);
 
+              // Determine if locked
+              // Unlocked if:
+              // 1. It is the first tutorial
+              // 2. The previous tutorial is completed
+              const isUnlocked =
+                index === 0 ||
+                completedTutorialIds.has(tutorials[index - 1].id);
+
               return (
                 <div
                   key={tutorial.id}
-                  onClick={() => setSelectedTutorialId(tutorial.id)}
-                  className={`group relative cursor-pointer border-l-[3px] px-6 py-4 transition-all duration-200 ${
+                  onClick={() => {
+                    if (isUnlocked || isCompleted) {
+                      setSelectedTutorialId(tutorial.id);
+                    } else {
+                      toast(
+                        "Please complete the previous lesson first.",
+                        "error",
+                      ); // Optional feedback
+                    }
+                  }}
+                  className={`group relative border-l-[3px] px-6 py-4 transition-all duration-200 ${
                     isActive
                       ? "border-[#285F3E] bg-[#F0FDF4]"
-                      : "border-transparent bg-white hover:bg-gray-50"
-                  } `}
+                      : "border-transparent bg-white"
+                  } ${
+                    !isUnlocked && !isCompleted
+                      ? "cursor-not-allowed bg-gray-50 opacity-50"
+                      : "cursor-pointer hover:bg-gray-50"
+                  }`}
                 >
                   <div className="flex items-start gap-4">
                     <div className="mt-0.5 shrink-0">
@@ -351,7 +698,9 @@ const CourseTutorialPage = () => {
                       ) : isActive ? (
                         <PlayCircle className="h-5 w-5 fill-[#EDFCF2] text-[#285F3E]" />
                       ) : (
-                        <div className="h-5 w-5 rounded-full border-2 border-gray-300 transition-colors group-hover:border-gray-400" />
+                        <div
+                          className={`h-5 w-5 rounded-full border-2 transition-colors ${!isUnlocked ? "border-gray-200" : "border-gray-300 group-hover:border-gray-400"}`}
+                        />
                       )}
                     </div>
                     <div className="min-w-0 flex-1">
@@ -359,16 +708,24 @@ const CourseTutorialPage = () => {
                         className={`mb-1 text-sm leading-snug font-semibold transition-colors ${
                           isActive
                             ? "text-[#1F2937]"
-                            : "text-gray-600 group-hover:text-gray-900"
+                            : !isUnlocked
+                              ? "text-gray-400"
+                              : "text-gray-600 group-hover:text-gray-900"
                         }`}
                       >
                         {index + 1}. {tutorial.title}
                       </p>
                       <div className="flex items-center gap-2">
-                        <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium tracking-wider text-gray-400 uppercase">
+                        <span
+                          className={`rounded px-1.5 py-0.5 text-[10px] font-medium tracking-wider uppercase ${!isUnlocked ? "bg-gray-100 text-gray-300" : "bg-gray-100 text-gray-400"}`}
+                        >
                           {tutorial.type}
                         </span>
-                        {/* Add duration if available in future */}
+                        {!isUnlocked && (
+                          <span className="text-[10px] text-gray-400 italic">
+                            Locked
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>

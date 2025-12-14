@@ -8,35 +8,39 @@ export class PostLearningAnalysis {
     this.repository = repository;
   }
 
-  async execute(payload: LearningAnalysisRequestDTO): Promise<void> {
+  async execute(payload: LearningAnalysisRequestDTO): Promise<any> {
     try {
       const response = await this.repository.postLearningAnalysis(payload);
-      // Save the predicted label to local storage
-      if (response.result) {
-        if (response.result.predicted_label) {
+
+      // The repository (via DataSource) now returns the Result object directly.
+      // So 'response' IS the prediction data.
+
+      // Save directly to local storage (legacy support / immediate availability)
+      if (response) {
+        if (response.predicted_label) {
           localStorage.setItem(
             "learning_analysis_label",
-            response.result.predicted_label,
+            response.predicted_label,
           );
         }
-        if (response.result.lime_visualization) {
+        if (response.lime_visualization) {
           localStorage.setItem(
             "lime_visualization",
-            response.result.lime_visualization,
+            response.lime_visualization,
           );
         }
-        if (response.result.confidence_visualization) {
+        if (response.confidence_visualization) {
           localStorage.setItem(
             "confidence_visualization",
-            response.result.confidence_visualization,
+            response.confidence_visualization,
           );
         }
       }
+
+      return response;
     } catch (error) {
       console.error("Failed to post learning analysis:", error);
-      // Optionally rethrow or handle error silently depending on requirements.
-      // Since this is a side-effect of completion, we might not want to block the UI if it fails.
-      // However, logging is important.
+      throw error;
     }
   }
 }

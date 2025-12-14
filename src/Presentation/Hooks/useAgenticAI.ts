@@ -6,6 +6,7 @@ const BOOTSTRAP_PROMPT = `Context & Role: You are the Wise Digital Mentor for th
 
 
 Input Data You Will Receive:
+•⁠  User ID: {{USER_ID}}
 •⁠  Student Profile: {{STUDENT_NAME}}
 •⁠  Real-time Activity Data: Video completion rates, quiz scores, login frequency, time spent per module.
 •⁠  ML Classification: "{{ML_LABEL}}". Statuses: "Si Cepat Paham" or "Si Jago" (Fast Learner), "Si Ragu-Ragu" (Hesitant), or "Si Berisiko Gagal" (At Risk).
@@ -40,12 +41,17 @@ export const useAgenticAI = () => {
   const [error, setError] = useState<string | null>(null);
   const ws = useRef<WebSocket | null>(null);
 
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
   const [limeVisualization, setLimeVisualization] = useState<string | null>(
-    localStorage.getItem("lime_visualization"),
+    localStorage.getItem("lime_visualization") || user.lime_visualization,
   );
   const [confidenceVisualization, setConfidenceVisualization] = useState<
     string | null
-  >(localStorage.getItem("confidence_visualization"));
+  >(
+    localStorage.getItem("confidence_visualization") ||
+      user.confidence_visualization,
+  );
 
   // Data Fetching for Context
   const { data: journeys, isLoading: isLoadingJourneys } = useJourneysFactory();
@@ -99,13 +105,14 @@ export const useAgenticAI = () => {
     const userId = user.id || "1273d239-30ed-4bb9-82ff-59e5afa7dbca";
     const username = user.username || "Student";
     const learningLabel =
-      localStorage.getItem("learning_analysis_label") || "Si Cepat Paham";
+      localStorage.getItem("learning_analysis_label") || "Belum Ada";
 
     setIsLoading(true);
     setError(null);
 
     // Dynamic Prompt Injection
-    const dynamicPrompt = BOOTSTRAP_PROMPT.replace("{{STUDENT_NAME}}", username)
+    const dynamicPrompt = BOOTSTRAP_PROMPT.replace("{{USER_ID}}", userId)
+      .replace("{{STUDENT_NAME}}", username)
       .replace("{{ML_LABEL}}", learningLabel)
       .replace("{{COMPLETED_COURSES}}", completedList)
       .replace("{{IN_PROGRESS_COURSES}}", inProgressList)
@@ -115,7 +122,7 @@ export const useAgenticAI = () => {
     const socket = new WebSocket("ws://localhost:8080/ws");
     ws.current = socket;
 
-    socket.onopen = () => {
+    const handleOpen = () => {
       console.log("Agentic AI WS Connected");
 
       // Register
@@ -132,11 +139,12 @@ export const useAgenticAI = () => {
           type: "chat",
           input: dynamicPrompt,
           task: "logistic-agent",
+          user_id: userId,
         }),
       );
     };
 
-    socket.onmessage = (event) => {
+    const handleMessage = (event: MessageEvent) => {
       try {
         const data = JSON.parse(event.data);
 
@@ -153,7 +161,7 @@ export const useAgenticAI = () => {
       }
     };
 
-    socket.onerror = (e) => {
+    const handleError = (e: Event) => {
       console.error("Agentic AI WS Error", e);
       setResponse((prev) => {
         if (!prev) setError("Failed to connect to AI Mentor");
@@ -162,7 +170,15 @@ export const useAgenticAI = () => {
       setIsLoading(false);
     };
 
+    socket.addEventListener("open", handleOpen);
+    socket.addEventListener("message", handleMessage);
+    socket.addEventListener("error", handleError);
+
     return () => {
+      socket.removeEventListener("open", handleOpen);
+      socket.removeEventListener("message", handleMessage);
+      socket.removeEventListener("error", handleError);
+
       if (
         socket.readyState === WebSocket.OPEN ||
         socket.readyState === WebSocket.CONNECTING

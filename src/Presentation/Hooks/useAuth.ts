@@ -5,54 +5,55 @@ import { SignUpUseCase } from "@/Domain/Auth/UseCases/SignUpUseCase";
 import { LogoutUseCase } from "@/Domain/Auth/UseCases/LogoutUseCase";
 
 export const useSignIn = (signInUseCase: SignInUseCase) => {
-	const mutation = useMutation({
-		mutationFn: async (data: SignInRequestDTO) => {
-			const res = await signInUseCase.execute(data);
+  const mutation = useMutation({
+    mutationFn: async (data: SignInRequestDTO) => {
+      const res = await signInUseCase.execute(data);
 
-			if (res.token) localStorage.setItem("accessToken", res.token);
-			if (res.user) localStorage.setItem("user", JSON.stringify(res.user));
+      if (res.token) localStorage.setItem("accessToken", res.token);
+      if (res.user) localStorage.setItem("user", JSON.stringify(res.user));
 
-			return res;
-		},
-	});
+      return res;
+    },
+  });
 
-	return {
-		signIn: mutation.mutateAsync,
-		loading: mutation.isPending,
-		error: mutation.error,
-	};
+  return {
+    signIn: mutation.mutateAsync,
+    loading: mutation.isPending,
+    error: mutation.error,
+  };
 };
 
 export const useSignUp = (signUpUseCase: SignUpUseCase) => {
-	const mutation = useMutation({
-		mutationFn: async (data: SignUpRequestDTO) => {
-			const res = await signUpUseCase.execute(data);
+  const mutation = useMutation({
+    mutationFn: async (data: SignUpRequestDTO) => {
+      const res = await signUpUseCase.execute(data);
 
-			if (res.token) localStorage.setItem("accessToken", res.token);
-			if (res.user) localStorage.setItem("user", JSON.stringify(res.user));
+      if (res.token) localStorage.setItem("accessToken", res.token);
+      if (res.user) localStorage.setItem("user", JSON.stringify(res.user));
 
-			return res;
-		},
-	});
+      return res;
+    },
+  });
 
-	return {
-		signUp: mutation.mutateAsync,
-		loading: mutation.isPending,
-		error: mutation.error,
-	};
+  return {
+    signUp: mutation.mutateAsync,
+    loading: mutation.isPending,
+    error: mutation.error,
+  };
 };
 
 export const useLogout = (logoutUseCase: LogoutUseCase) => {
-	const mutation = useMutation({
-		mutationFn: async () => {
-			const res = logoutUseCase.execute();
-			return res;
-		},
-	});
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const res = logoutUseCase.execute();
+      localStorage.clear();
+      return res;
+    },
+  });
 
-	return {
-		logout: mutation.mutateAsync,
-		loading: mutation.isPending,
-		error: mutation.error,
-	};
+  return {
+    logout: mutation.mutateAsync,
+    loading: mutation.isPending,
+    error: mutation.error,
+  };
 };

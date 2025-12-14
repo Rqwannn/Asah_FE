@@ -28,8 +28,17 @@ const JourneyCard = ({ journey }: { journey: Journey }) => {
   const { mutate: enroll, isPending: isEnrolling } =
     usePostJourneyCompletionFactory();
 
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const isReviewer = user.role === "reviewer";
+
   const handleAction = (e: React.MouseEvent) => {
     e.stopPropagation();
+
+    if (isReviewer) {
+      window.location.href = `/journeys/${journey.id}/submissions`;
+      return;
+    }
+
     if (completion) {
       window.location.href = `/course/learning/${journey.id}`;
     } else {
@@ -51,7 +60,11 @@ const JourneyCard = ({ journey }: { journey: Journey }) => {
   return (
     <div
       className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-      onClick={() => (window.location.href = `/course/${journey.id}`)}
+      onClick={() =>
+        (window.location.href = isReviewer
+          ? `/journeys/${journey.id}/submissions`
+          : `/course/${journey.id}`)
+      }
     >
       <div className="relative h-40 w-full overflow-hidden bg-gray-100">
         {journey.image_path ? (
@@ -93,17 +106,28 @@ const JourneyCard = ({ journey }: { journey: Journey }) => {
             variant="ghost"
             onClick={handleAction}
             className={`h-8 rounded-full px-3 text-xs font-bold ${
-              completion || isEnrolling
-                ? "text-orange-600 hover:bg-orange-50 hover:text-orange-700"
-                : "text-[#285F3E] hover:bg-[#285F3E]/10 hover:text-[#285F3E]"
+              isReviewer
+                ? "text-blue-600 hover:bg-blue-50 hover:text-blue-700"
+                : completion || isEnrolling
+                  ? "text-orange-600 hover:bg-orange-50 hover:text-orange-700"
+                  : "text-[#285F3E] hover:bg-[#285F3E]/10 hover:text-[#285F3E]"
             }`}
           >
-            {isLoading || isEnrolling
-              ? "Loading..."
-              : completion
-                ? "Continue Learning"
-                : "Start Learning"}
-            <i className={`ri-arrow-right-line ml-1`}></i>
+            {isReviewer ? (
+              <>
+                Review Submissions
+                <i className={`ri-file-list-3-line ml-1`}></i>
+              </>
+            ) : (
+              <>
+                {isLoading || isEnrolling
+                  ? "Loading..."
+                  : completion
+                    ? "Continue Learning"
+                    : "Start Learning"}
+                <i className={`ri-arrow-right-line ml-1`}></i>
+              </>
+            )}
           </Button>
         </div>
       </div>

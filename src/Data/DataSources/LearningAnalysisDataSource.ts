@@ -1,36 +1,52 @@
 import axios from "axios";
 import {
-	LearningAnalysisRequestDTO,
-	LearningAnalysisResponseDTO,
+  LearningAnalysisRequestDTO,
+  LearningAnalysisResultDTO,
 } from "../DTOs/LearningAnalysisDTO";
 
 export class LearningAnalysisDataSource {
-	private readonly baseUrl = "http://0.0.0.0:8020/api";
+  private readonly baseUrl = "http://0.0.0.0:8020/api";
 
-	async postLearningAnalysis(
-		payload: LearningAnalysisRequestDTO
-	): Promise<LearningAnalysisResponseDTO> {
-		try {
-			const response = await axios.post(
-				`${this.baseUrl}/learning_analysis`,
-				payload
-			);
-			// The API returns an array like [{...}, 201], we are interested in the first element's DATA
-			// Adjusting based on the user provided example response:
-			// [ { STATUS: "CREAD_ACTION", CODE: 201, DATA: { status: 201, message: "...", result: {...} } }, 201 ]
+  async postLearningAnalysis(
+    payload: LearningAnalysisRequestDTO,
+  ): Promise<LearningAnalysisResultDTO> {
+    try {
+      const response = await axios.post(
+        `${this.baseUrl}/learning_analysis`,
+        payload,
+      );
 
-			if (Array.isArray(response.data) && response.data.length > 0) {
-				const firstItem = response.data[0];
-				if (firstItem.DATA) {
-					return firstItem.DATA;
-				}
-			}
+      // Response from Backend Wrapper (Standard)
+      // { status: "success", data: [ { DATA: { result: ... } } ] }
+      if (
+        response.data &&
+        response.data.data &&
+        Array.isArray(response.data.data)
+      ) {
+        const aiResponseArray = response.data.data;
+        if (
+          aiResponseArray.length > 0 &&
+          aiResponseArray[0].DATA &&
+          aiResponseArray[0].DATA.result
+        ) {
+          return aiResponseArray[0].DATA.result;
+        }
+      }
 
-			// Fallback if structure is different but still valid axios response
-			return response.data;
-		} catch (error) {
-			console.error("Error posting learning analysis:", error);
-			throw error;
-		}
-	}
+      // Fallback: Direct AI Response (if backend proxy is raw)
+      // [ { DATA: { result: ... } } ]
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        const firstItem = response.data[0];
+        if (firstItem.DATA && firstItem.DATA.result) {
+          return firstItem.DATA.result;
+        }
+      }
+
+      // Fallback generic
+      return response.data;
+    } catch (error) {
+      console.error("Error posting learning analysis:", error);
+      throw error;
+    }
+  }
 }

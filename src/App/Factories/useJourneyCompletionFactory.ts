@@ -57,3 +57,34 @@ export const useUserCompletionsFactory = () => {
     queryFn: () => getUserCompletions.execute(),
   });
 };
+
+import { PutJourneyCompletion } from "../../Domain/Journey/UseCase/PutJourneyCompletion";
+
+export const usePutJourneyCompletionFactory = () => {
+  const dataSource = new JourneyCompletionDataSource();
+  const repository = new JourneyCompletionRepositoryImpl(dataSource);
+  const putCompletion = new PutJourneyCompletion(repository);
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      journeyId,
+      payload,
+    }: {
+      journeyId: number;
+      payload: {
+        enrollments_at?: string;
+        last_enrolled_at: string;
+        study_duration?: number;
+      };
+    }) => putCompletion.execute(journeyId, payload),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ["journeyCompletion", String(data.journey_id)],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["journeys"],
+      });
+    },
+  });
+};

@@ -52,6 +52,30 @@ export class JourneyCompletionRepositoryImpl implements JourneyCompletionReposit
     };
   }
 
+  async putCompletion(
+    journeyId: number,
+    payload: {
+      enrollments_at?: string;
+      last_enrolled_at: string;
+      study_duration?: number;
+    },
+  ): Promise<JourneyCompletionModel> {
+    const response = await this.dataSource.putCompletion(journeyId, payload);
+    const data = response.data; // Now accessing data from PostJourneyCompletionResponse
+    return {
+      id: data.id,
+      user_id: data.user_id,
+      journey_id: data.journey_id,
+      avg_submission_rating: data.avg_submission_rating,
+      study_duration: data.study_duration,
+      enrolling_times: data.enrolling_times,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+      enrollments_at: data.enrollments_at || [],
+      last_enrolled_at: data.last_enrolled_at,
+    };
+  }
+
   async getUserCompletions(): Promise<JourneyCompletionModel[]> {
     const response = await this.dataSource.getUserCompletions();
     return response.data.map(

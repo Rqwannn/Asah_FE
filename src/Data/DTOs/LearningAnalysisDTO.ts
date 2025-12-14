@@ -13,14 +13,16 @@ export interface LearningAnalysisRequestDTO {
   submission_rating: number;
 }
 
+export interface LearningAnalysisResultDTO {
+  predicted_label: string;
+  raw_output: number;
+  processed_features: any;
+  lime_visualization?: string;
+  confidence_visualization?: string;
+}
+
 export interface LearningAnalysisResponseDTO {
   status: number;
   message: string;
-  result: {
-    predicted_label: string;
-    raw_output: number;
-    processed_features: any;
-    lime_visualization?: string;
-    confidence_visualization?: string;
-  };
+  result: LearningAnalysisResultDTO;
 }

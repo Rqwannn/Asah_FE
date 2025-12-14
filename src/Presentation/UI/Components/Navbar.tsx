@@ -77,6 +77,22 @@ const Navbar = () => {
               ></i>
             </Button>
           </Link>
+          {JSON.parse(localStorage.getItem("user") || "{}").role ===
+            "reviewer" && (
+            <Link to={"/submissions"}>
+              <Button
+                variant={null}
+                size={"icon"}
+                className={`text-2xl ${
+                  isActive("/submissions")
+                    ? "text-[#FFFFFF]"
+                    : "text-[#FFFFFF]/70"
+                } cursor-pointer`}
+              >
+                <i className="ri-file-list-3-line"></i>
+              </Button>
+            </Link>
+          )}
 
           {/* Avatar Dropdown */}
           <div className="relative" ref={dropdownRef}>
@@ -174,6 +190,23 @@ const Navbar = () => {
               ></i>
             </Button>
           </Link>
+          {JSON.parse(localStorage.getItem("user") || "{}").role ===
+            "reviewer" && (
+            <Link to={"/submissions"}>
+              <Button
+                variant={null}
+                size={"icon-lg"}
+                className={`text-[32px] ${
+                  isActive("/submissions")
+                    ? "text-[#FFFFFF]"
+                    : "text-[#FFFFFF]/70"
+                } cursor-pointer`}
+                title="All Submissions"
+              >
+                <i className="ri-file-list-3-line"></i>
+              </Button>
+            </Link>
+          )}
         </div>
         <div className="flex flex-col items-center">
           <Button
