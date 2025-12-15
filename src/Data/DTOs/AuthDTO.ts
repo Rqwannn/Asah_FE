@@ -22,10 +22,7 @@ export interface SignInResponseDTO {
 export interface SignUpResponseDTO {
   status: string;
   message: string;
-  data: {
-    result: UserDTO;
-    accessToken: string;
-  };
+  data: UserDTO & { accessToken: string };
 }
 
 export interface UserDTO {

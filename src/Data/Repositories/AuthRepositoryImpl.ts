@@ -51,12 +51,12 @@ export class AuthRepositoryImpl implements AuthRepository {
     const decoded = jwtDecode<JwtPayload>(res.data.accessToken);
 
     const user = new UserModel(
-      res.data.result.id,
-      res.data.result.username,
-      res.data.result.email,
-      res.data.result.skills,
-      res.data.result.discovers,
-      res.data.result.role,
+      res.data.id,
+      res.data.username,
+      res.data.email,
+      res.data.skills,
+      res.data.discovers,
+      res.data.role,
       decoded.iat,
       decoded.exp,
     );
